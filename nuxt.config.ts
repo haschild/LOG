@@ -67,7 +67,7 @@ export default defineNuxtConfig({
 /**
  * 导入第三方模块
  */
-  modules: ['@element-plus/nuxt', '@nuxt/image'],
+  modules: ['@element-plus/nuxt'],
   elementPlus: { 
     // themes:"dark",
     components:["ElButton"]

@@ -51,3 +51,6 @@ pnpm dlx nuxi@latest init <project-name>
 1. https://nuxt.com.cn/docs/getting-started/styling 看下 第三方库和模块
 可以解决，全局样式，流行架构
 
+
+## 开箱即用模板
+1. https://nuxt3-awesome-starter.vercel.app/post
