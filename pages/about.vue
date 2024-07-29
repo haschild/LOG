@@ -1,6 +1,7 @@
 <template>
     <section>
       <p class="textColor">This should be red</p>
+      <el-button type="primary">Save</el-button>
     </section>
   </template>
 

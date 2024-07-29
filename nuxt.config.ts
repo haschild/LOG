@@ -62,6 +62,15 @@ export default defineNuxtConfig({
    * 包含（本地样式，npm，url引用）都可以引用全局
    */
   // css: ['~/assets/css/main.css']
-  css: ['animate.css'] // npm 仓库样式引用全局
+  css: ['animate.css'], // npm 仓库样式引用全局
+
+/**
+ * 导入第三方模块
+ */
+  modules: ['@element-plus/nuxt', '@nuxt/image'],
+  elementPlus: { 
+    // themes:"dark",
+    components:["ElButton"]
+   }
   
 })
