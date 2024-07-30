@@ -54,3 +54,11 @@ pnpm dlx nuxi@latest init <project-name>
 
 ## 开箱即用模板
 1. https://nuxt3-awesome-starter.vercel.app/post
+
+
+
+## 技术框架
+1. netlify https://www.netlify.com/ 提供前端部署服务
+2. TailwindCSS 控制页面自适应  unocss https://unocss.dev/ 也是不错的
+3. Nuxt Ui 作为基本框架
+4. normalize.css 让浏览器样式统一

@@ -60,14 +60,15 @@ export default defineNuxtConfig({
   /**
    * 导入全局样式
    * 包含（本地样式，npm，url引用）都可以引用全局
+   * 使用normalize.css 让浏览器样式统一
    */
   // css: ['~/assets/css/main.css']
-  css: ['animate.css'], // npm 仓库样式引用全局
+  css: ['@unocss/reset/normalize.css','animate.css'], // npm 仓库样式引用全局
 
 /**
  * 导入第三方模块
  */
-  modules: ['@element-plus/nuxt'],
+  modules: ['@element-plus/nuxt','@unocss/nuxt'],
   elementPlus: { 
     // themes:"dark",
     components:["ElButton"]
