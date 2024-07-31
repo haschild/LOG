@@ -59,6 +59,8 @@ pnpm dlx nuxi@latest init <project-name>
 
 ## 技术框架
 1. netlify https://www.netlify.com/ 提供前端部署服务
-2. TailwindCSS 控制页面自适应  unocss https://unocss.dev/ 也是不错的
+2. TailwindCSS 控制页面自适应 （https://tailwindcss.nuxtjs.org/）  unocss https://unocss.dev/ 也是不错的
 3. Nuxt Ui 作为基本框架
 4. normalize.css 让浏览器样式统一
+5. elementUI-plus https://nuxt.com/modules/element-plus |  https://github.com/element-plus/element-plus-nuxt
+6. 查看 tailwind css 用法 http://localhost:3000/_tailwind/

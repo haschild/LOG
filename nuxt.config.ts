@@ -6,8 +6,18 @@ export default defineNuxtConfig({
   // 定义整个头部，也可以用 useHead 再次设置
   app: {
     head: {
+      title:"Element Plus + Nuxt3 + tailwind css", 
       charset: 'utf-8',
       viewport: 'width=device-width, initial-scale=1',
+      meta: [
+        { name: 'viewport', content: 'width=device-width, initial-scale=1' },
+        {
+          hid: 'description',
+          name: 'description',
+          content: 'ElementPlus + Nuxt3',
+        },
+      ],
+      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
     }
   },
 
@@ -63,15 +73,40 @@ export default defineNuxtConfig({
    * 使用normalize.css 让浏览器样式统一
    */
   // css: ['~/assets/css/main.css']
-  css: ['@unocss/reset/normalize.css','animate.css'], // npm 仓库样式引用全局
+  css: ['animate.css'], // npm 仓库样式引用全局
 
 /**
  * 导入第三方模块
  */
-  modules: ['@element-plus/nuxt','@unocss/nuxt'],
-  elementPlus: { 
-    // themes:"dark",
-    components:["ElButton"]
-   }
+  modules: ['@nuxtjs/tailwindcss','@element-plus/nuxt'],
+ 
+
+   // Defaults options
+  tailwindcss: {
+    cssPath: ['~/assets/css/tailwind.css', { injectPosition: "first" }],
+    configPath: 'tailwind.config',
+    exposeConfig: {
+      level: 2
+    },
+    config: {},
+    viewer: true,
+  },
+
+  elementPlus: {
+    icon: 'ElIcon',
+    importStyle: 'scss',
+    themes: ['dark'],
+  },
+
+    // vueuse
+    vueuse: {
+      ssrHandlers: true,
+    },
+  
+    // colorMode
+    colorMode: {
+      classSuffix: '',
+    }
+  
   
 })
