@@ -78,7 +78,7 @@ export default defineNuxtConfig({
 /**
  * 导入第三方模块
  */
-  modules: ['@nuxtjs/tailwindcss','@element-plus/nuxt'],
+  modules: ['@nuxtjs/tailwindcss','@element-plus/nuxt','@nuxtjs/color-mode'],
  
 
    // Defaults options

@@ -8,7 +8,6 @@
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
-    "preinstall": "npx only-allow pnpm",
     "start": "node .output/server/index.mjs"
   },
   "dependencies": {
@@ -21,6 +20,7 @@
   },
   "devDependencies": {
     "@element-plus/nuxt": "^1.0.9",
+    "@nuxtjs/color-mode": "^3.3.2",
     "@element-plus/icons-vue": "^2.3.1",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "element-plus": "^2.7.8",
