@@ -42,3 +42,11 @@
   
   const activeName = ref('/about');
   </script>
+
+  <style lang="scss">
+  .el-aside{
+    ul{
+      border: 0;
+    }
+  }
+</style>

@@ -8,7 +8,7 @@ $secondary: #E4A79D;
 
 html,
 body,
-#app {
+#app ,#__nuxt{
   margin: 0;
   padding: 0;
 }
@@ -22,3 +22,5 @@ a {
   font-weight: 400;
   color: var(--el-color-primary);
 }
+
+
