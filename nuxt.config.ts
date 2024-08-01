@@ -25,6 +25,14 @@ export default defineNuxtConfig({
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
 
+  build:{
+    devServer:{
+      headers: {
+        'Cache-Control': 'no-store, must-revalidate',
+      },
+    }
+  },
+
 
   /**
    *区分生产和开发环境
@@ -61,7 +69,9 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          additionalData: '@use "@/assets/css/_colors.scss" as *;'
+          //  additionalData: '@use "@/assets/scss/_colors.scss" as *;'
+          additionalData: `@use "~/assets/scss/element/index.scss" as ele;`,
+        
         }
       }
     }
@@ -73,12 +83,12 @@ export default defineNuxtConfig({
    * 使用normalize.css 让浏览器样式统一
    */
   // css: ['~/assets/css/main.css']
-  css: ['animate.css'], // npm 仓库样式引用全局
+  css: ['animate.css','~/assets/scss/index.scss'], // npm 仓库样式引用全局
 
 /**
  * 导入第三方模块
  */
-  modules: ['@nuxtjs/tailwindcss','@element-plus/nuxt','@nuxtjs/color-mode'],
+  modules: ['@nuxtjs/tailwindcss','@element-plus/nuxt','@nuxtjs/color-mode','@vueuse/nuxt','@pinia/nuxt'],
  
 
    // Defaults options
@@ -106,7 +116,12 @@ export default defineNuxtConfig({
     // colorMode
     colorMode: {
       classSuffix: '',
-    }
+    },
+
+    // 自动导入，pinaia 在页面可以直接使用
+    pinia: {
+      autoImports: ['defineStore', 'acceptHMRUpdate'],
+    },
   
   
 })

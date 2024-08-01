@@ -12,7 +12,7 @@ const bgColor = ref('yellow')
 <style lang="scss">
 
     .textColor{
-     color: rgba($primary, 0.5);
+     color: rgba(ele.$color-primary, 0.5);
      background: v-bind(bgColor);
     } 
 </style>

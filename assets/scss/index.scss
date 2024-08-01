@@ -1,0 +1,24 @@
+/**
+ * 设置主要的颜色变量
+ */
+
+
+$primary: #49240F;
+$secondary: #E4A79D;
+
+html,
+body,
+#app {
+  margin: 0;
+  padding: 0;
+}
+
+html.dark {
+  background: #222;
+  color: white;
+}
+
+a {
+  font-weight: 400;
+  color: var(--el-color-primary);
+}

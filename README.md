@@ -62,5 +62,7 @@ pnpm dlx nuxi@latest init <project-name>
 2. TailwindCSS 控制页面自适应 （https://tailwindcss.nuxtjs.org/）  unocss https://unocss.dev/ 也是不错的
 3. Nuxt Ui 作为基本框架
 4. normalize.css 让浏览器样式统一
-5. elementUI-plus https://nuxt.com/modules/element-plus |  https://github.com/element-plus/element-plus-nuxt
+5. elementUI-plus https://nuxt.com/modules/element-plus |  https://github.com/element-plus/element-plus-nuxt-starter/tree/main
 6. 查看 tailwind css 用法 http://localhost:3000/_tailwind/
+7. Router 使用 pinia https://nuxt.com/modules/pinia
+8. @vueuser/core 添加vue3 组合 API 钩子， 简化 Vue 组件的逻辑喝状态管理 https://github.com/antfu-collective/vitesse-nuxt3 | https://nuxt.com/modules/vueuse

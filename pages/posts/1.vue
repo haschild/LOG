@@ -1,7 +1,7 @@
 <template>
     <div>
         {{id}}
-        <el-button class="bg-red-500 hover:bg-sky-700">
+        <el-button type="primary" class="bg-red-500 hover:bg-sky-700">
             Save changes
         </el-button>
 

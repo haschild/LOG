@@ -11,17 +11,21 @@
     "start": "node .output/server/index.mjs"
   },
   "dependencies": {
+    "@pinia/nuxt": "^0.5.2",
+    "@vueuse/core": "^10.11.0",
+    "@vueuse/nuxt": "^10.11.0",
     "animate.css": "^4.1.1",
     "nuxt": "^3.12.4",
-    "vue": "latest"
+    "pinia": "^2.2.0",
+    "vue": "^3.2.0"
   },
   "engines": {
     "node": ">=18.16.0"
   },
   "devDependencies": {
+    "@element-plus/icons-vue": "^2.3.1",
     "@element-plus/nuxt": "^1.0.9",
     "@nuxtjs/color-mode": "^3.3.2",
-    "@element-plus/icons-vue": "^2.3.1",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "element-plus": "^2.7.8",
     "sass": "^1.77.8"
