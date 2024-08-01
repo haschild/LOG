@@ -1,23 +1,16 @@
 <template>
-    <el-container>
-      <el-header>Header</el-header>
+    <el-container style="flex-direction: column;">
+      <app-header></app-header>
       <el-container>
         <el-aside width="200px">
-          <AppMenu/>
+          <app-menu/>
         </el-aside>
-        <slot />
+        <el-main>
+          <slot />
+        </el-main>
       </el-container>
     </el-container>
   </template>
 
   
-<style lang="scss">
-html,body{
-  margin: 0;
-  padding:0;
-}
-.el-container{
-  height: 100vh;
-}
-</style>
   

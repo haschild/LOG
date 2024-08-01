@@ -87,20 +87,22 @@ export default defineNuxtConfig({
 
 /**
  * 导入第三方模块
+ * 
+ * '@nuxtjs/tailwindcss',
  */
-  modules: ['@nuxtjs/tailwindcss','@element-plus/nuxt','@nuxtjs/color-mode','@vueuse/nuxt','@pinia/nuxt'],
+  modules: ['@element-plus/nuxt','@nuxtjs/color-mode','@vueuse/nuxt','@pinia/nuxt'],
  
 
    // Defaults options
-  tailwindcss: {
-    cssPath: ['~/assets/css/tailwind.css', { injectPosition: "first" }],
-    configPath: 'tailwind.config',
-    exposeConfig: {
-      level: 2
-    },
-    config: {},
-    viewer: true,
-  },
+  // tailwindcss: {
+  //   cssPath: ['~/assets/css/tailwind.css', { injectPosition: "first" }],
+  //   configPath: 'tailwind.config',
+  //   exposeConfig: {
+  //     level: 2
+  //   },
+  //   config: {},
+  //   viewer: true,
+  // },
 
   elementPlus: {
     icon: 'ElIcon',

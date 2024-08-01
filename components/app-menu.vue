@@ -5,7 +5,6 @@
           :router=true
           @open="handleOpen"
           @close="handleClose"
-          @select="handleSelect"
         >
           <el-sub-menu index="1">
             <template #title>

@@ -12,7 +12,7 @@
         <el-card>sdfsdf</el-card>
 
         <ClientOnly>
-    <el-switch v-model="colorMode" inline-prompt active-text="dark" inactive-text="light" size="large"></el-switch>
+    
   </ClientOnly>
 
 
@@ -26,9 +26,5 @@ const id  = ref(route.params.id);
 // 当访问/posts/1时，route.params.id将为1
 console.log(route.params.id)
 
-const color = useColorMode();
-const colorMode = computed({
-  get: () => color.value === 'dark',
-  set: () => (color.preference = (color.value === 'dark' ? 'light' : 'dark')),
-});
+
 </script>
