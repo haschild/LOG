@@ -2,6 +2,10 @@
     <section>
       <p class="textColor">This should be red</p>
       <el-button type="primary">Save</el-button>
+
+      <button class="md:hover:bg-fuchsia-600">
+        Save changes
+      </button>
     </section>
   </template>
 

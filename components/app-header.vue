@@ -1,9 +1,11 @@
 <template>
 <el-header>
+<el-col :span="6">
+</el-col>
 <el-col :span="12"></el-col>
-<el-col :span="12" class="right">
+<el-col :span="6" class="flex ">
     <!-- <el-switch  v-model="colorMode" inline-prompt active-text="dark" inactive-text="light" size="large"></el-switch> -->
-    <el-icon  @click="handleCheckBtn" style="font-size:1.5rem"><Sunny /></el-icon>
+    <div @click="handleCheckBtn" class="item-right text-2xl w-6 h-6 inline-block cursor-pointer"><Sunny /></div>
 </el-col>
 
 </el-header>

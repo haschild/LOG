@@ -88,21 +88,21 @@ export default defineNuxtConfig({
 /**
  * 导入第三方模块
  * 
- * '@nuxtjs/tailwindcss',
+ * '',
  */
-  modules: ['@element-plus/nuxt','@nuxtjs/color-mode','@vueuse/nuxt','@pinia/nuxt'],
+  modules: ['@nuxtjs/tailwindcss','@element-plus/nuxt','@nuxtjs/color-mode','@vueuse/nuxt','@pinia/nuxt'],
  
 
    // Defaults options
-  // tailwindcss: {
-  //   cssPath: ['~/assets/css/tailwind.css', { injectPosition: "first" }],
-  //   configPath: 'tailwind.config',
-  //   exposeConfig: {
-  //     level: 2
-  //   },
-  //   config: {},
-  //   viewer: true,
-  // },
+  tailwindcss: {
+    cssPath: ['~/assets/css/tailwind.css', { injectPosition: "first" }],
+    configPath: 'tailwind.config',
+    exposeConfig: {
+      level: 1
+    },
+    config: {},
+    viewer: true,  // 结合vscode 在编写的时候移动上去可以看到实际的样式
+  },
 
   elementPlus: {
     icon: 'ElIcon',
