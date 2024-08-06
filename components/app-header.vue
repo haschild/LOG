@@ -1,12 +1,18 @@
 <template>
-<el-header>
-<el-col :span="6">
-</el-col>
-<el-col :span="12"></el-col>
-<el-col :span="6" class="flex ">
-    <!-- <el-switch  v-model="colorMode" inline-prompt active-text="dark" inactive-text="light" size="large"></el-switch> -->
+<el-header class="flex items-center bg-[var(--el-color-primary)]">
+<div class="xl:w-1/5 lg:w-1/3 text-center " >
+ <h4 class="text-white"> Nuxt Ui </h4>
+</div>
+<div class="xl:flex-1 lg:flex-1">
+  <el-menu  mode="horizontal" class="justify-center" router  background-color="var(--el-color-primary)" text-color="white" active-text-color="white">
+    <el-menu-item  index="/">Home</el-menu-item>
+    <el-menu-item index="/about">About</el-menu-item>
+    <el-menu-item index="3">Contact</el-menu-item>
+  </el-menu>
+</div>
+<div class="xl:w-1/5 lg:w-8 flex  justify-end">
     <div @click="handleCheckBtn" class="item-right text-2xl w-6 h-6 inline-block cursor-pointer"><Sunny /></div>
-</el-col>
+</div>
 
 </el-header>
 </template>
@@ -25,16 +31,9 @@ const handleCheckBtn = () => {
 };
 </script>
 <style lang="scss">
-    .el-header {
-        background-color: ele.$color-primary;
-        display: flex;
-        align-items: center;
-    }
-    .right{
-        text-align: right;
-        .el-icon{
-            cursor: pointer;
-            user-select: none;
-        }
+    
+    .el-menu{
+      &:hover{
+      }
     }
 </style>

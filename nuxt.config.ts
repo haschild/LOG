@@ -18,7 +18,13 @@ export default defineNuxtConfig({
         },
       ],
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
-    }
+    },
+    // 设置全局的动画效果
+    pageTransition: {
+      name: 'page',
+      mode: 'out-in',
+    },
+    layoutTransition: { name: 'layout', mode: 'out-in' }
   },
 
 

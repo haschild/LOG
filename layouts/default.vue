@@ -1,8 +1,8 @@
 <template>
-    <el-container style="flex-direction: column;height: 100vh;">
+    <el-container class="container-start h-full" style="flex-direction: column; height: 100vh;">
       <app-header></app-header>
       <el-container>
-        <el-aside width="200px" style="margin-top: 20px;">
+        <el-aside style="margin-top: 20px;" v-if="menuIsShow">
             <app-menu/>
         </el-aside>
         <el-main>
@@ -13,6 +13,29 @@
       </el-container>
     </el-container>
   </template>
+
+<script  lang="ts" setup>
+// 如果是主页，不显示左侧的菜单
+  // 获取现在路由
+  const route = useRoute();
+  const menuIsShow  = computed(()=>{
+    return route.path == '/' ? false:true;
+  });
+
+
+</script>
+
+<style>
+.page-enter-active,
+.page-leave-active {
+  transition: all 0.4s;
+}
+.page-enter-from,
+.page-leave-to {
+  opacity: 0;
+  filter: blur(1rem);
+}
+</style>
 
   
   

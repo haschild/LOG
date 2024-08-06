@@ -2,7 +2,7 @@
 
 
 <template>
-  <el-main>Main</el-main>
+  <el-main>可以做主页</el-main>
 </template>
 
   

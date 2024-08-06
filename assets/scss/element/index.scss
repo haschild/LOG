@@ -20,7 +20,15 @@ $-colors: (
 );
 
 @forward 'element-plus/theme-chalk/src/common/var.scss' with (
-  $colors: $-colors
+  $colors: $-colors,
+
+  // 不知道怎么修改组件 el-menu 的颜色
+  $notification: (
+    'bg-color': (
+      'base': rgba(107,33,168, 0.7),
+      'overlay': #0a63bb,
+    )
+  )
 );
 
 @use './dark.scss';

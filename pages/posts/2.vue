@@ -1,6 +1,6 @@
 <template>
     <div>
-        {{id}}
+       id: {{id}}
     </div>
 </template>
 

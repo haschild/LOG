@@ -4,5 +4,9 @@ module.exports = {
       './pages/**/*.{vue,html,js}',
       './components/**/*.{vue,html,js}',
     ],
+    corePlugins:{
+      preflight:true
+    }
+
     // ...
   }
