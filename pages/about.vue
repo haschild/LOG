@@ -14,7 +14,7 @@ const bgColor = ref('yellow')
 
 definePageMeta({
   pageTransition: {
-    name: 'layout'
+    name: 'page'
   }
 })
 </script>

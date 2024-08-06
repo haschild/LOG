@@ -21,10 +21,9 @@ export default defineNuxtConfig({
     },
     // 设置全局的动画效果
     pageTransition: {
-      name: 'page',
-      mode: 'out-in',
+      name: 'rotate',
     },
-    layoutTransition: { name: 'layout', mode: 'out-in' }
+    // layoutTransition: { name: 'layout', mode: 'out-in' }
   },
 
 
