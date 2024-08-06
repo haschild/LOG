@@ -1,6 +1,7 @@
 <template>
     <el-container class="container-start h-full" style="flex-direction: column; height: 100vh;">
       <app-header></app-header>
+      <NuxtLoadingIndicator /> <!-- 显示加载进度条 -->
       <el-container>
         <el-aside style="margin-top: 20px;" v-if="menuIsShow">
             <app-menu/>

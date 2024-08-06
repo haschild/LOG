@@ -14,7 +14,7 @@ export default defineNuxtConfig({
         {
           hid: 'description',
           name: 'description',
-          content: 'ElementPlus + Nuxt3',
+          content: 'ElementPlus + Nuxt3 + tailwindCSS',
         },
       ],
       link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],

@@ -6,23 +6,26 @@
           @open="handleOpen"
           @close="handleClose"
         >
-          <el-sub-menu index="1">
+          <el-sub-menu index="/about">
             <template #title>
               <el-icon><location /></el-icon>
-              <span>Navigator One</span>
+              <span>About</span>
+              {{activeName}}
             </template>
               <el-menu-item index="/about">
-                Abort
+                About
               </el-menu-item>
-              <el-menu-item index="/posts/1"  >
-                post 1
-              </el-menu-item>
+             
+          </el-sub-menu>
+          <el-sub-menu index="/posts">
+            <template #title>
+              <el-icon><location /></el-icon>
+              <span>Post</span>
+            </template>
+
+            <el-menu-item index="/posts/1"> post 1</el-menu-item>
               <el-menu-item index="/posts/2">post 2</el-menu-item>
           </el-sub-menu>
-          <el-menu-item index="2">
-            <el-icon><icon-menu /></el-icon>
-            <span>Navigator Two</span>
-          </el-menu-item>
         </el-menu>
   </template>
   
@@ -40,7 +43,10 @@
     console.log(key, keyPath)
   };
   
-  const activeName = ref('/about');
+  const route = useRoute();
+  const activeName = computed(() => {
+    return route.path
+  })
 
   
 

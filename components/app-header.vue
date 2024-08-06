@@ -7,7 +7,7 @@
   <el-menu  mode="horizontal" class="justify-center" router  background-color="var(--el-color-primary)" text-color="white" active-text-color="white">
     <el-menu-item  index="/">Home</el-menu-item>
     <el-menu-item index="/about">About</el-menu-item>
-    <el-menu-item index="3">Contact</el-menu-item>
+    <el-menu-item index="/posts/1">Post</el-menu-item>
   </el-menu>
 </div>
 <div class="xl:w-1/5 lg:w-8 flex  justify-end">
