@@ -66,3 +66,4 @@ pnpm dlx nuxi@latest init <project-name>
 6. 查看 tailwind css 用法 http://localhost:3000/_tailwind/
 7. Router 使用 pinia https://nuxt.com/modules/pinia
 8. @vueuser/core 添加vue3 组合 API 钩子， 简化 Vue 组件的逻辑喝状态管理 https://github.com/antfu-collective/vitesse-nuxt3 | https://nuxt.com/modules/vueuse
+9. 如果是参考怎么快速搭建页面 https://www.reweb.so/ 虽然是收费的网站，快速出草图和能看到页面结构并且也是用tailwind css 所以真不错
