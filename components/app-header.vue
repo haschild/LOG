@@ -30,10 +30,3 @@ const handleCheckBtn = () => {
   color.preference = (color.value === 'dark' ? 'light' : 'dark');
 };
 </script>
-<style lang="scss">
-    
-    .el-menu{
-      &:hover{
-      }
-    }
-</style>

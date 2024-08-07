@@ -3,11 +3,11 @@
       <app-header></app-header>
       <NuxtLoadingIndicator /> <!-- 显示加载进度条 -->
       <el-container>
-        <el-aside style="margin-top: 20px;" v-if="menuIsShow">
+        <el-aside class="mt-5"  v-if="menuIsShow">
             <app-menu/>
         </el-aside>
         <el-main>
-          <el-card style="height: 100%;box-sizing: border-box;">
+          <el-card class="box-border">
             <slot />
           </el-card>
         </el-main>
