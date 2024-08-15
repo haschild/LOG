@@ -11,7 +11,7 @@
       <h1 class="text-center font-heading text-4xl font-semibold sm:text-5xl sm:leading-tight max-w-5xl">Edit this template or click "New Design" to start building from scratch</h1>
       <p class="max-w-lg text-center text-lg text-muted-foreground sm:text-xl">Build at the speed of no-code. Export Next.js & Tailwind code. Customize with no limits.</p>
       <div class="grid grid-cols-2 gap-3">
-        <el-link src="#" size="large">Learn More</el-link>
+        <el-link src="#" name="i-uil:github" size="large">Learn More</el-link>
       <el-button size="large" type="primary">Get Started</el-button>
       </div>
     </section>

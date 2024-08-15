@@ -4,13 +4,14 @@
   "type": "module",
   "scripts": {
     "build": "nuxt build",
-    "dev": "nuxt dev",
+    "dev": "nuxt dev --port 4000",
     "generate": "nuxt generate",
     "preview": "nuxt preview",
     "postinstall": "nuxt prepare",
     "start": "node .output/server/index.mjs"
   },
   "dependencies": {
+    "@nuxt/icon": "^1.4.5",
     "@pinia/nuxt": "^0.5.2",
     "@vueuse/core": "^10.11.0",
     "@vueuse/nuxt": "^10.11.0",
@@ -30,7 +31,6 @@
     "element-plus": "^2.7.8",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.5",
-    "sass": "^1.77.8",
-    "unplugin-icons": "^0.19.2"
+    "sass": "^1.77.8"
   }
 }

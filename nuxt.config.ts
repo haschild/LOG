@@ -35,9 +35,10 @@ export default defineNuxtConfig({
       headers: {
         'Cache-Control': 'no-store, must-revalidate',
       },
-    }
+    },
+    
   },
-
+  
 
   /**
    *区分生产和开发环境
@@ -95,7 +96,14 @@ export default defineNuxtConfig({
  * 
  * '',
  */
-  modules: ['@nuxtjs/tailwindcss','@element-plus/nuxt','@nuxtjs/color-mode','@vueuse/nuxt','@pinia/nuxt'],
+  modules: [
+    '@nuxtjs/tailwindcss',
+    '@element-plus/nuxt',
+    '@nuxtjs/color-mode',
+    '@vueuse/nuxt',
+    '@pinia/nuxt',
+    "@nuxt/icon"
+  ],
  
 
    // Defaults options

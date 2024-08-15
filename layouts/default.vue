@@ -2,8 +2,8 @@
     <el-container class="container-start h-full" style="flex-direction: column; height: 100vh;">
       <app-header></app-header>
       <NuxtLoadingIndicator /> <!-- 显示加载进度条 -->
-      <el-container>
-        <el-aside class="mt-5"  v-if="menuIsShow">
+      <el-container   style="height: calc(100vh - 60px);">
+        <el-aside class="mt-5 overflow-auto h-auto"  v-if="menuIsShow">
             <app-menu/>
         </el-aside>
         <el-main>
@@ -26,7 +26,7 @@
 
 </script>
 
-<style>
+<style lang="scss">
 /* 旋转动画样式 */
 .rotate-enter-active,
 .rotate-leave-active {
@@ -50,6 +50,7 @@
   opacity: 0;
   filter: blur(1rem);
 }
+
 </style>
 
   
