@@ -29,7 +29,7 @@ export default defineNuxtConfig({
 
   compatibilityDate: '2024-04-03',
   devtools: { enabled: true },
-
+  buildDir:"dist", // 构建目录
   build:{
     devServer:{
       headers: {
