@@ -1,5 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 
+// https://unpkg.com/element-plus@2.7.8/dist/index.css
+// https://unpkg.com/element-plus@2.7.8/dist/index.full.js
 
 
 export default defineNuxtConfig({
@@ -78,7 +80,7 @@ export default defineNuxtConfig({
           additionalData: `@use "~/assets/scss/element/index.scss" as ele;`,
         
         }
-      }
+      },
     }
   },
 
@@ -88,7 +90,7 @@ export default defineNuxtConfig({
    * 使用normalize.css 让浏览器样式统一
    */
   // css: ['~/assets/css/main.css']
-  css: ['animate.css','~/assets/scss/index.scss'], // npm 仓库样式引用全局
+  css: ['animate.css','~/assets/scss/index.scss','https://unpkg.com/element-plus@2.7.8/dist/index.css'], // npm 仓库样式引用全局
 
 /**
  * 导入第三方模块
