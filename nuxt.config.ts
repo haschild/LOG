@@ -19,7 +19,14 @@ export default defineNuxtConfig({
           content: 'ElementPlus + Nuxt3 + tailwindCSS',
         },
       ],
-      link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }],
+      script: [
+        { src: 'https://unpkg.com/element-plus@2.7.8/dist/index.full.js' }
+      ],
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
+        { rel: 'stylesheet', href: 'https://unpkg.com/element-plus@2.7.8/dist/index.css' }
+      ],
+     
     },
     // 设置全局的动画效果
     pageTransition: {
@@ -90,7 +97,7 @@ export default defineNuxtConfig({
    * 使用normalize.css 让浏览器样式统一
    */
   // css: ['~/assets/css/main.css']
-  css: ['animate.css','~/assets/scss/index.scss','https://unpkg.com/element-plus@2.7.8/dist/index.css'], // npm 仓库样式引用全局
+  css: ['animate.css','~/assets/scss/index.scss'], // npm 仓库样式引用全局
 
 /**
  * 导入第三方模块
