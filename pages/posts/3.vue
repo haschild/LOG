@@ -1,5 +1,6 @@
 <template>
-    <p>样式1</p>
+    <div>
+        <p>样式1</p>
     <ul class="demo1 line-animation">
         <li>首页</li>
         <li>产品</li>
@@ -30,6 +31,7 @@
         <li>服务</li>
         <li>关于</li>
     </ul>
+    </div>
 </template>
 <style  lang="scss">
     p{

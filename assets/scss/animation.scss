@@ -1,0 +1,25 @@
+/* 旋转动画样式 */
+.rotate-enter-active,
+.rotate-leave-active {
+  transition: all 0.4s;
+}
+.rotate-enter-from,
+.rotate-leave-to {
+  opacity: 0;
+  transform: rotate3d(1, 1, 1, 15deg);
+}
+
+/**
+ * 淡入淡出动画样式
+ */
+ .fadeIn-enter-active {
+  animation:0.6s  fadeIn;
+}
+
+/**
+ * 结合animation 使用
+   配置动画名称为bounce
+ */
+.bounce-enter-active {
+  animation:0.4s  rubberBand;
+}

@@ -20,17 +20,19 @@ export default defineNuxtConfig({
         },
       ],
       script: [
-        { src: 'https://unpkg.com/element-plus@2.7.8/dist/index.full.js' }
+        // { src: 'https://unpkg.com/element-plus@2.7.8/dist/index.full.js' }
       ],
       link: [
         { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'stylesheet', href: 'https://unpkg.com/element-plus@2.7.8/dist/index.css' }
+        // { rel: 'stylesheet', href: 'https://unpkg.com/element-plus@2.7.8/dist/index.css' }
+        {rel:"stylesheet",
+          href:"https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"}
       ],
      
     },
     // 设置全局的动画效果
     pageTransition: {
-      name: 'page',
+      name: 'fadeIn',
     },
     // layoutTransition: { name: 'layout', mode: 'out-in' }
   },
@@ -88,6 +90,11 @@ export default defineNuxtConfig({
         
         }
       },
+    },
+
+    // 配置vite打包排除模块
+    ssr: {
+      // external: ['element-plus']
     }
   },
 

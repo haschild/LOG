@@ -12,11 +12,11 @@
 <script setup lang="ts">
 const bgColor = ref('yellow')
 
-definePageMeta({
-  pageTransition: {
-    name: 'page'
-  }
-})
+// definePageMeta({
+//   pageTransition: {
+//     name: 'page'
+//   }
+// })
 </script>
 
 <style lang="scss">

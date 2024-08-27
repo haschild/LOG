@@ -1,5 +1,6 @@
 <template>
-  <h1>常用网站</h1>
+  <div>
+    <h1>常用网站</h1>
   <div class="flex w-full items-center justify-center">
     
     <div class="flex items-center gap-4  gradient-border text-md cursor-pointer px-4 py-2 sm:px-4 sm:py-2 sm:text-xl">
@@ -9,7 +10,12 @@
         <div class="text-sm">搜索网站</div>
       </div>
     </div>
+
+    <div>
+      <h1 class="animate__animated animate__bounce">An animated element</h1>
+    </div>
     
+  </div>
   </div>
 </template>
 
