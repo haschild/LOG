@@ -112,12 +112,13 @@ export default defineNuxtConfig({
  * '',
  */
   modules: [
-    '@nuxtjs/tailwindcss',
-    '@element-plus/nuxt',
-    '@nuxtjs/color-mode',
-    '@vueuse/nuxt',
-    '@pinia/nuxt',
-    "@nuxt/icon"
+   '@nuxtjs/tailwindcss',
+   '@element-plus/nuxt',
+   '@nuxtjs/color-mode',
+   '@vueuse/nuxt',
+   '@pinia/nuxt',
+   "@nuxt/icon",
+   '@nuxtjs/mdc',
   ],
  
 

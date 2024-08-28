@@ -8,7 +8,7 @@
           v-for="site of group.webSiteList"
           :key="site.name"
           @click="HandleOpen(site.url)"
-          class="gradient-border text-md flex cursor-pointer items-center gap-4 px-4 py-2 sm:px-4 sm:py-2 sm:text-xl"
+          class="gradient-border text-md flex cursor-pointer items-center gap-4 px-4 py-2 shadow-lg sm:px-4 sm:py-2 sm:text-xl"
         >
           <Icon v-if="site.icon" :name="site.icon"></Icon>
           <div class="inline-block">
