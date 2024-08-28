@@ -20,8 +20,7 @@
       </template>
 
       <el-menu-item index="/posts/1"> post 1</el-menu-item>
-      <el-menu-item index="/posts/2">post 2</el-menu-item>
-      <el-menu-item index="/posts/3">下划线动画</el-menu-item>
+      <el-menu-item index="/posts/form">表单</el-menu-item>
       <el-menu-item index="/posts/4">Nuxt 支持 Markdown</el-menu-item>
     </el-sub-menu>
   </el-menu>

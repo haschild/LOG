@@ -1,21 +1,16 @@
-/* @tailwind base;
+/* 📄 styles.css */
+@tailwind base;
 @tailwind components;
-@tailwind utilities; */
+@tailwind utilities;
 
 
-html,
-body, 
-{
-  margin: 0;
-  padding: 0;
-}
-
-html.dark {
-  background: #222;
-  color: white;
-}
-
-a {
-  font-weight: 400;
-  color: var(--el-color-primary);
+/* 应该指定这些自定义类应用到哪一个容器中 */
+/* 由于先后顺序对于 CSS 的优先级很重要 */
+/* 应用到 components 容器中，这样在 HTML 页面同时使用 btn-primary 和其他基础类，如 bg-sky-400 最终背景色还是以基础类 bg-sky-400 为准，由于 utilities 容器在更后的次序才添加到样式表中，它们的优先级更高 */
+/* @apply 可以用tailwind已经定义好的类，如 bg-sky-400 */
+@layer components {
+  /* 将基础类组合抽取出来 */
+  .btn-primary {
+    @apply py-2 px-4 bg-blue-500 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-400 focus:ring-opacity-75;
+  }
 }
