@@ -3,17 +3,17 @@
     <section class="mb-4" v-for="(group, index) of webSiteGroup" :key="index">
       <h1 class="text-md font-bold" v-text="group.groupName"></h1>
 
-      <div class="justify-left mt-4 flex w-full items-center gap-4">
+      <div class="justify-left mt-4 flex items-center gap-4">
         <div
           v-for="site of group.webSiteList"
           :key="site.name"
           @click="HandleOpen(site.url)"
-          class="gradient-border text-md flex cursor-pointer items-center gap-4 px-4 py-2 shadow-lg sm:px-4 sm:py-2 sm:text-xl"
+          class="gradient-border text-md flex w-[300px] cursor-pointer items-center gap-4 px-4 py-2 shadow-lg sm:px-4 sm:py-2 sm:text-xl"
         >
-          <Icon v-if="site.icon" :name="site.icon"></Icon>
-          <div class="inline-block">
+          <Icon class="w-[40px]" :name="site.icon ? site.icon : ''"></Icon>
+          <div class="w-[260px]">
             <h4 class="text-xl font-semibold" v-text="site.name"></h4>
-            <div class="text-sm" v-text="site.desc"></div>
+            <div class="truncate text-sm" v-text="site.desc"></div>
           </div>
         </div>
       </div>
@@ -66,6 +66,16 @@ webSiteGroup.value = [
         name: "Vue",
         desc: "Vue 是一个渐进式 JavaScript 框架",
         url: "https://cn.vuejs.org",
+      },
+    ],
+  },
+  {
+    groupName: "摄影",
+    webSiteList: [
+      {
+        name: "Behance",
+        desc: "一个综合性平台，可帮助雇主和创作者发现灵感、建立联系，畅游创意世界",
+        url: "https://www.behance.net/",
       },
     ],
   },

@@ -24,7 +24,7 @@
 // 获取现在路由
 const route = useRoute();
 const menuIsShow = computed(() => {
-  return route.path == "/" ? false : true;
+  return ["/", "/website"].includes(route.path) ? false : true;
 });
 </script>
 
