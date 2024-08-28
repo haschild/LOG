@@ -35,50 +35,49 @@ Locally preview production build:
 npm run preview
 ```
 
-## 快速开始
-* GitHub 开箱即用
-    https://nuxt3-awesome-starter.vercel.app/post
-* 页面布局参考，直观调整页面，且用taillwindcss控制样式
-    https://www.reweb.so/
+学习Nuxt3记录下过程
 
+### 快速开始
 
+1. 搭建好的Nuxt3项目[参考一](https://nuxt3-awesome-starter.vercel.app/post) | [参考二](https://github.com/antfu-collective/vitesse-nuxt3)
+2. 虽然是收费的，不过也是使用tailwind css 所以可以参考布局[页面布局参考](https://www.reweb.so/)
 
+### 选择框架
 
-## 技术框架
+CSS 部分
 
-#### 前端框架
+1. TailWindCSS 快速实现自定义样式
 
-1. TailwindCSS 控制页面自适应 
-* 官网地址（https://tailwindcss.nuxtjs.org/）|  unocss https://unocss.dev/ 也是不错的
-* 本地便捷查看样式 http://localhost:3000/_tailwind/
+    * [官网地址](https://tailwindcss.nuxtjs.org/)
+    * [本地便捷查看样式](http://localhost:3000/_tailwind/)
+    * [快速学习](https://juejin.cn/column/7045544678527074335/)
 
 2. normalize.css 让浏览器样式统一
 
-3. elementUI-plus 
-    * nuxt如何配置element-plus  https://nuxt.com/modules/element-plus 
-    * GitHub 已经搭建好的项目 Nuxt + element-plus  https://github.com/element-plus/element-plus-nuxt-starter/tree/main
+ui框架
 
-7. Router 使用 pinia https://nuxt.com/modules/pinia
+1. elementUI-plus 作为UI框架
+    * [Nuxt如何配置](https://nuxt.com/modules/element-plus)
+    * GitHub 已经搭建好的项目 [Nuxt + element-plus  ](https://github.com/element-plus/element-plus-nuxt-starter/tree/main)
 
-8. @vueuser/core 添加vue3 组合 API 钩子， 简化 Vue 组件的逻辑喝状态管理 https://github.com/antfu-collective/vitesse-nuxt3 | https://nuxt.com/modules/vueuse
+路由Router 使用 [pinia](https://nuxt.com/modules/pinia)
+icon 可以用Nuxt自带的模块`@nuxt/icon`能选择的图片比elementUI-plus 多很多
 
-10. icon 可以用nuxt自带的模块 @nuxt/icon 能选择的图片比elementUI-plus 多很多
+### 部署服务
 
+[netlify](https://www.netlify.com/) 提供前端部署服务，免费且直接可以使用Github仓库自动部署
 
-#### 部署服务
-1. netlify https://www.netlify.com/ 提供前端部署服务
-
-
-## 问题
+### 问题
 
 1. 初始化项目报错
 
 ```bash
 pnpm dlx nuxi@latest init <project-name>
 ```
+
 最后解决办法是根据错误提示，找到要下载的文件连接，用浏览器请求且下载文件，然后手动复制到指定目录下即可，参考地址https://segmentfault.com/q/1010000044611069
 
+#### 研究
 
-## 研究
 1. https://nuxt.com.cn/docs/getting-started/styling 看下 第三方库和模块
 可以解决，全局样式，流行架构

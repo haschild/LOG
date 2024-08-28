@@ -10,7 +10,6 @@
       <template #title>
         <el-icon><location /></el-icon>
         <span>About</span>
-        {{ activeName }}
       </template>
       <el-menu-item index="/about"> About </el-menu-item>
     </el-sub-menu>
