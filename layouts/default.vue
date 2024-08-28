@@ -10,7 +10,7 @@
       <el-aside class="mt-5 h-auto overflow-auto" v-if="menuIsShow">
         <app-menu />
       </el-aside>
-      <el-main :class="{ twinPeaks: menuIsShow }">
+      <el-main :class="{ twinPeaks: menuIsShow && color.value != 'dark' }">
         <el-card class="box-border">
           <slot />
         </el-card>
@@ -26,6 +26,9 @@ const route = useRoute();
 const menuIsShow = computed(() => {
   return ["/", "/website"].includes(route.path) ? false : true;
 });
+
+// 获取主题颜色
+const color = useColorMode();
 </script>
 
 <style lang="scss"></style>
