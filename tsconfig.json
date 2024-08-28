@@ -1,4 +1,9 @@
 {
   // https://nuxt.com/docs/guide/concepts/typescript
-  "extends": "./.nuxt/tsconfig.json"
+  "extends": "./.nuxt/tsconfig.json",
+
+  // 在import导入模块的时候用node的模块解析
+  "compilerOptions": {
+    "moduleResolution": "node"
+  }
 }
