@@ -1,7 +1,12 @@
 /* 📄 styles.css */
-@tailwind base;
+/* @tailwind base; */
 @tailwind components;
-@tailwind utilities;
+/* @tailwind utilities; */
+
+/**
+概念快速学习
+https://juejin.cn/column/7045544678527074335
+*/
 
 
 /* 应该指定这些自定义类应用到哪一个容器中 */

@@ -85,7 +85,7 @@ export default defineNuxtConfig({
     css: {
       preprocessorOptions: {
         scss: {
-          //  additionalData: '@use "@/assets/scss/_colors.scss" as *;'
+          // 如果需要引入多个，在分号后面继续添加 @use "~/a/.scss"
           additionalData: `@use "~/assets/scss/element/index.scss" as ele;`,
         
         }
@@ -103,8 +103,7 @@ export default defineNuxtConfig({
    * 包含（本地样式，npm，url引用）都可以引用全局
    * 使用normalize.css 让浏览器样式统一
    */
-  // css: ['~/assets/css/main.css']
-  css: ['animate.css','~/assets/scss/index.scss'], // npm 仓库样式引用全局
+  css: ['~/assets/scss/tailwind.css','animate.css','~/assets/scss/index.scss'], // npm 仓库样式引用全局
 
 /**
  * 导入第三方模块
@@ -121,17 +120,6 @@ export default defineNuxtConfig({
    '@nuxtjs/mdc',
   ],
  
-
-   // Defaults options
-  tailwindcss: {
-    cssPath: ['~/assets/scss/tailwind.css', { injectPosition: "first" }],
-    configPath: 'tailwind.config',
-    exposeConfig: {
-      level: 1
-    },
-    config: {},
-    viewer: true,  // 结合vscode 在编写的时候移动上去可以看到实际的样式
-  },
 
   elementPlus: {
     icon: 'ElIcon',

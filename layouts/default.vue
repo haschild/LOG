@@ -6,15 +6,19 @@
     <app-header></app-header>
     <NuxtLoadingIndicator />
     <!-- 显示加载进度条 -->
-    <el-container style="height: calc(100vh - 60px)">
-      <el-aside class="mt-5 h-auto overflow-auto" v-if="menuIsShow">
+    <el-container style="height: calc(100vh - 60px)" v-if="menuIsShow">
+      <el-aside class="mt-5 h-auto overflow-auto">
         <app-menu />
       </el-aside>
-      <el-main :class="{ twinPeaks: menuIsShow && color.value != 'dark' }">
+      <el-main class="twinPeaks">
         <el-card class="box-border">
           <slot />
         </el-card>
       </el-main>
+    </el-container>
+
+    <el-container v-else style="height: calc(100vh - 60px)">
+      <slot />
     </el-container>
   </el-container>
 </template>
@@ -24,7 +28,7 @@
 // 获取现在路由
 const route = useRoute();
 const menuIsShow = computed(() => {
-  return ["/", "/website"].includes(route.path) ? false : true;
+  return ["/", "/website", "/login"].includes(route.path) ? false : true;
 });
 
 // 获取主题颜色

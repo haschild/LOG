@@ -2,7 +2,7 @@
  * 设置主要的颜色变量
  */
 
-  @import './animation.scss';
+  @use './animation.scss';
 
 $primary: #49240F;
 $secondary: #E4A79D;
