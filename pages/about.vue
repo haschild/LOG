@@ -11,6 +11,10 @@
       <br />
       3. 使用tailwind定义样抽象类
       <div><button class="btn-primary">Save changes</button></div>
+      <br />
+      使用i18n
+      <br />
+      <p>{{ $t("welcome") }}</p>
     </div>
   </section>
 </template>
