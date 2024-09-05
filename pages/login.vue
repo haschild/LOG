@@ -1,11 +1,11 @@
 <template>
   <div class="selection:bg-primary-500 selection:text-white">
-    <div class="bg-primary-100 flex h-full w-dvw items-center justify-center">
+    <div class="flex h-full w-dvw items-center justify-center bg-primary-100">
       <div class="flex-1 p-8">
         <div
           class="mx-auto w-80 overflow-hidden rounded-3xl bg-white shadow-xl"
         >
-          <div class="rounded-bl-4xl bg-primary-500 relative h-48">
+          <div class="rounded-bl-4xl relative h-48 bg-primary-500">
             <svg
               class="absolute bottom-0"
               xmlns="http://www.w3.org/2000/svg"
@@ -26,7 +26,7 @@
                   id="email"
                   name="email"
                   type="text"
-                  class="focus:border-primary-600 peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none"
+                  class="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:border-primary-600 focus:outline-none"
                   placeholder="john@doe.com"
                 />
                 <label
@@ -40,7 +40,7 @@
                   id="password"
                   type="password"
                   name="password"
-                  class="focus:border-primary-600 peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:outline-none"
+                  class="peer h-10 w-full border-b-2 border-gray-300 text-gray-900 placeholder-transparent focus:border-primary-600 focus:outline-none"
                   placeholder="Password"
                 />
                 <label
@@ -53,12 +53,13 @@
               <input
                 type="sumbit"
                 value="Sign in"
-                class="bg-primary-500 hover:bg-primary-400 focus:ring-primary-500 mt-20 block w-full cursor-pointer rounded px-4 py-2 text-center font-semibold text-white focus:outline-none focus:ring focus:ring-opacity-80 focus:ring-offset-2"
+                @click="Login"
+                class="mt-20 block w-full cursor-pointer rounded bg-primary-500 px-4 py-2 text-center font-semibold text-white focus:outline-none focus:ring focus:ring-primary-500 focus:ring-opacity-80 focus:ring-offset-2 md:hover:bg-red-400 xl:hover:bg-primary-400"
               />
             </form>
             <a
               href="#"
-              class="text-primary-600 focus:ring-primary-500 mt-4 block text-center text-sm font-medium hover:underline focus:outline-none focus:ring-2"
+              class="mt-4 block text-center text-sm font-medium text-primary-600 hover:underline focus:outline-none focus:ring-2 focus:ring-primary-500"
             >
               Forgot your password?
             </a>
@@ -70,6 +71,7 @@
 </template>
 
 <script setup lang="ts">
+import lodash from "lodash";
 // 自定义中间件校验
 definePageMeta({
   middleware: [
@@ -81,4 +83,51 @@ definePageMeta({
     },
   ],
 });
+
+const Login = () => {
+  // 本地跳转
+  localNavigate();
+
+  // serveNavigate();
+};
+
+const serveNavigate = () => {
+  // 服务端跳转
+  fetch("http://localhost:3000/login", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      username: "admin",
+      password: "123456",
+    }),
+  })
+    .then((response) => {
+      if (!response.ok) {
+        throw new Error("Network response was not ok");
+      }
+      return response.json(); // 解析 JSON 响应体
+    })
+    .then((responseData) => {
+      console.log("Received JSON:", responseData); // 处理响应数据
+      // 保存 token
+      localStorage.setItem("token", responseData.token);
+      // 跳转, 如果有会跳地址，优先跳转
+      const route = useRoute();
+      let path = <string>route.query.from || "/";
+      navigateTo(path);
+    })
+    .catch((error) => {
+      console.error("Error:", error); // 处理请求过程中发生的错误
+    });
+};
+
+const localNavigate = () => {
+  localStorage.setItem("token", "123456");
+  // 跳转, 如果有会跳地址，优先跳转
+  const route = useRoute();
+  let path = <string>route.query.from || "/";
+  navigateTo(path);
+};
 </script>

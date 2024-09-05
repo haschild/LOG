@@ -77,6 +77,17 @@ export default defineNuxtConfig({
     }
   },
 
+  nitro: {
+    devProxy: {
+      "/login": {
+        target: "http://localhost:3000/login", // 这里是接口地址
+        changeOrigin: true,
+        prependPath: true,
+      },
+    },
+  },
+
+
   /**
    * 
    * 将sass的颜色变量引入全局样式

@@ -24,7 +24,10 @@
     <div class="flex items-center justify-end gap-5 pr-10 lg:w-8 xl:w-1/5">
       <!-- 国际化 -->
       <el-dropdown>
-        <Icon class="cursor-pointer text-xl" name="iconoir:language" />
+        <Icon
+          class="cursor-pointer text-xl text-white"
+          name="iconoir:language"
+        />
         <template #dropdown>
           <el-dropdown-menu>
             <el-dropdown-item
@@ -51,6 +54,8 @@
         @click="VisitGithub"
         name="logos:github-icon"
       ></Icon>
+
+      <el-button @click="LogOutFun">登出</el-button>
     </div>
   </el-header>
 </template>
@@ -69,5 +74,13 @@ const handleCheckBtn = () => {
 
 const VisitGithub = () => {
   window.open("https://github.com/haschild/LOG");
+};
+
+const LogOutFun = () => {
+  const route = useRoute();
+  console.log(route.path);
+
+  localStorage.removeItem("token");
+  navigateTo({ path: "/login", query: { from: route.path } });
 };
 </script>
