@@ -22,6 +22,8 @@
       <el-menu-item index="/posts/1"> post 1</el-menu-item>
       <el-menu-item index="/posts/form">表单</el-menu-item>
       <el-menu-item index="/posts/4">Nuxt 支持 Markdown</el-menu-item>
+      <el-menu-item index="/posts/grid">grid 布局</el-menu-item>
+      <el-menu-item index="/posts/tree">tree 树</el-menu-item>
     </el-sub-menu>
   </el-menu>
 </template>
