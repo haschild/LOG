@@ -127,6 +127,32 @@ const selectionStart = ref<Point>({ x: 0, y: 0 });
 const selectionEnd = ref<Point>({ x: 0, y: 0 });
 const selectedCurveIndices = ref<number[]>([]);
 
+const isEditable = ref(true);
+// 配置变量
+const defConfig = ref({
+  // 是否可以编辑 true/false
+  isEditable: true,
+  // 配置连接线的颜色
+  curveColor: "#3498db",
+  // 设置连接点的位置 左右可以连接
+  connectorPosition: "left right",
+  // 设置连接点是否可以有多个连接线 true/false
+  allowMultipleConnections: true,
+  // 初始化数据
+  initialData: {
+    data: [
+      { name: "1", id: 1, connectorPosition: "left" },
+      { name: "2", id: 2, connectorPosition: "left" },
+      { name: "3", id: 3, connectorPosition: "left" },
+      { name: "1", id: 4, connectorPosition: "right" },
+      { name: "2", id: 5, connectorPosition: "right" },
+      { name: "3", id: 6, connectorPosition: "right" },
+    ],
+    // 连接线, 通过id确定连接关系
+    links: ["1-6", "2-4", "3-5"],
+  },
+});
+
 const getCurvePath = (curve: Curve) => {
   const { x: startX, y: startY } = curve.start;
   const { x: endX, y: endY } = curve.end;
@@ -144,6 +170,8 @@ const startDrag = (
   index: number,
   event: MouseEvent,
 ) => {
+  if (!isEditable.value) return;
+
   isDragging.value = true;
   dragTarget.value = { side, index };
 

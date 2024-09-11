@@ -9,9 +9,9 @@
     <el-sub-menu index="/about">
       <template #title>
         <el-icon><location /></el-icon>
-        <span>About</span>
+        <span>Bezier</span>
       </template>
-      <el-menu-item index="/about"> About </el-menu-item>
+      <el-menu-item index="/about/bezier"> About </el-menu-item>
     </el-sub-menu>
     <el-sub-menu index="/posts">
       <template #title>
