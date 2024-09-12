@@ -18,6 +18,15 @@ interface Item {
   id: number;
 }
 
+// 防抖函数
+const debounce = (func: Function, wait: number) => {
+  let timeout: number | undefined;
+  return (...args: any[]) => {
+    clearTimeout(timeout);
+    timeout = window.setTimeout(() => func(...args), wait);
+  };
+};
+
 // 使用贝塞尔曲线的组合函数
 export function useBezier() {
   const bgColor = ref("yellow");
@@ -276,6 +285,8 @@ export function useBezier() {
 
   // 更新曲线位置
   const updateCurvePositions = () => {
+    console.log('updateCurvePositions');
+    
     curves.value.forEach((curve, index) => {
       const { startKey, endKey } = curve;
       const startEle = document.querySelector(`.left li[data-id="${startKey}"]`);
@@ -332,6 +343,9 @@ export function useBezier() {
     });
   };
 
+  // 防抖处理的更新曲线位置函数
+  const debouncedUpdateCurvePositions = debounce(updateCurvePositions, 200);
+
   return {
     bgColor,
     svg,
@@ -356,6 +370,7 @@ export function useBezier() {
     handleKeyDown,
     isEditable: defConfig.value.isEditable,
     allowMultipleConnections: defConfig.value.allowMultipleConnections,
-    connectionCounts
+    connectionCounts,
+    debouncedUpdateCurvePositions
   };
 }

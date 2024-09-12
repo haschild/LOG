@@ -109,6 +109,7 @@
 
 <script setup lang="ts">
 import { useBezier } from "~/composables/useBezier";
+import _ from "lodash";
 
 const {
   bgColor,
@@ -141,7 +142,7 @@ const {
 onMounted(() => {
   initializeData();
 
-  window.addEventListener("resize", updateCurvePositions);
+  window.addEventListener("resize", _.debounce(updateCurvePositions, 10));
   window.addEventListener("keydown", handleKeyDown);
 });
 
@@ -149,9 +150,6 @@ onUnmounted(() => {
   window.removeEventListener("resize", updateCurvePositions);
   window.removeEventListener("keydown", handleKeyDown);
 });
-
-// 组件挂载后，初始化曲线位置
-updateCurvePositions();
 </script>
 
 <style lang="scss" scoped>
