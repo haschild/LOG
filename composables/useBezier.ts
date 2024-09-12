@@ -1,6 +1,6 @@
-import { ref, onMounted, onUnmounted } from "vue";
+import { ref, onMounted, onUnmounted, nextTick } from "vue";
 
-// 将所有接口和类型定义移到这里
+// 定义接口
 interface Point {
   x: number;
   y: number;
@@ -9,6 +9,8 @@ interface Point {
 interface Curve {
   start: Point;
   end: Point;
+  startKey: number | null;
+  endKey: number | null;
 }
 
 interface Item {
@@ -16,8 +18,7 @@ interface Item {
   id: number;
 }
 
-// ... 其他接口定义 ...
-
+// 使用贝塞尔曲线的组合函数
 export function useBezier() {
   const bgColor = ref("yellow");
   const svg = ref<SVGSVGElement | null>(null);
@@ -26,9 +27,7 @@ export function useBezier() {
   const rightItems = ref<Item[]>([]);
 
   const isDragging = ref(false);
-  const dragTarget = ref<{ side: "left" | "right"; index: number } | null>(
-    null,
-  );
+  const dragTarget = ref<{ side: "left" | "right"; index: number } | null>(null);
   const dragPoint = ref({ x: 0, y: 0 });
 
   const curves = ref<Curve[]>([]);
@@ -40,32 +39,29 @@ export function useBezier() {
   const selectionEnd = ref<Point>({ x: 0, y: 0 });
   const selectedCurveIndices = ref<number[]>([]);
 
-  const isEditable = ref(true);
   // 配置变量
   const defConfig = ref({
-    // 是否可以编辑 true/false
-    isEditable: true,
-    // 配置连接线的颜色
-    curveColor: "#3498db",
-    // 设置连接点的位置 左右可以连接
-    connectorPosition: "left right",
-    // 设置连接点是否可以有多个连接线 true/false
-    allowMultipleConnections: true,
-    // 初始化数据
+    isEditable: true, // 是否可以编辑
+    curveColor: "#3498db", // 配置连接线的颜色
+    connectorPosition: "left right", // 设置连接点的位置
+    allowMultipleConnections: true, // 设置连接点是否可以有多个连接线
     initialData: {
       data: [
-        { name: "1", id: 1, connectorPosition: "left" },
-        { name: "2", id: 2, connectorPosition: "left" },
-        { name: "3", id: 3, connectorPosition: "left" },
-        { name: "1", id: 4, connectorPosition: "right" },
-        { name: "2", id: 5, connectorPosition: "right" },
-        { name: "3", id: 6, connectorPosition: "right" },
+        { name: "选项1", id: 1, connectorPosition: "left" },
+        { name: "选项2", id: 2, connectorPosition: "left" },
+        { name: "选项3", id: 3, connectorPosition: "left" },
+        { name: "选项4", id: 4, connectorPosition: "right" },
+        { name: "选项5", id: 5, connectorPosition: "right" },
+        { name: "选项6", id: 6, connectorPosition: "right" },
       ],
-      // 连接线, 通过id确定连接关系
-      links: ["1-6", "2-4", "3-5"],
+      links: ["1-6", "2-4", "3-5","1-4"], // 连接线，通过id确定连接关系
     },
   });
 
+  // 计数器对象，用于跟踪每个吸附点的连接曲线数量
+  const connectionCounts = ref<{ [key: string]: number }>({});
+
+  // 获取曲线路径
   const getCurvePath = (curve: Curve) => {
     const { x: startX, y: startY } = curve.start;
     const { x: endX, y: endY } = curve.end;
@@ -78,12 +74,9 @@ export function useBezier() {
     return `M ${startX},${startY} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${endX},${endY}`;
   };
 
-  const startDrag = (
-    side: "left" | "right",
-    index: number,
-    event: MouseEvent,
-  ) => {
-    if (!isEditable.value) return;
+  // 开始拖动
+  const startDrag = (side: "left" | "right", index: number, event: MouseEvent) => {
+    if (!defConfig.value.isEditable) return;
 
     isDragging.value = true;
     dragTarget.value = { side, index };
@@ -96,25 +89,51 @@ export function useBezier() {
       y: connectorRect.top + connectorRect.height / 2 - svgRect.top,
     };
 
+    let connectedCurves = 0;
+    const parentElement = (event.target as HTMLElement).parentElement;
+    if (parentElement) {
+      const targetId = parentElement.getAttribute("data-id");
+      connectedCurves = targetId ? connectionCounts.value[targetId] : 0;
+    }
+
+    if (!defConfig.value.allowMultipleConnections && connectedCurves > 0) {
+      isDragging.value = false;
+      return;
+    }
+
     if (side === "left") {
-      curves.value.push({ start: point, end: { x: point.x, y: point.y } });
+      curves.value.push({ start: point, end: { x: point.x, y: point.y }, startKey: parseInt(parentElement?.getAttribute("data-id") || "0"), endKey: null });
     } else {
-      curves.value.push({ start: { x: point.x, y: point.y }, end: point });
+      curves.value.push({ start: { x: point.x, y: point.y }, end: point, startKey: null, endKey: parseInt(parentElement?.getAttribute("data-id") || "0") });
     }
     activeCurveIndex.value = newCurveIndex;
   };
 
+  // 停止拖动
   const stopDrag = () => {
     if (isDragging.value && activeCurveIndex.value !== null) {
       const nearestConnector = findNearestConnector();
       if (nearestConnector) {
         if (dragTarget.value?.side === "left") {
-          curves.value[activeCurveIndex.value].end = nearestConnector.point;
+          if (defConfig.value.allowMultipleConnections || !curves.value.some(curve => curve.end === nearestConnector.point)) {
+            curves.value[activeCurveIndex.value].end = nearestConnector.point;
+            curves.value[activeCurveIndex.value].endKey = parseInt(nearestConnector.id.split("-")[1]);
+            const key = `${nearestConnector.point.x}-${nearestConnector.point.y}`;
+            connectionCounts.value[key] = (connectionCounts.value[key] || 0) + 1;
+          } else {
+            curves.value.splice(activeCurveIndex.value, 1);
+          }
         } else {
-          curves.value[activeCurveIndex.value].start = nearestConnector.point;
+          if (defConfig.value.allowMultipleConnections || !curves.value.some(curve => curve.start === nearestConnector.point)) {
+            curves.value[activeCurveIndex.value].start = nearestConnector.point;
+            curves.value[activeCurveIndex.value].startKey = parseInt(nearestConnector.id.split("-")[1]);
+            const key = `${nearestConnector.point.x}-${nearestConnector.point.y}`;
+            connectionCounts.value[key] = (connectionCounts.value[key] || 0) + 1;
+          } else {
+            curves.value.splice(activeCurveIndex.value, 1);
+          }
         }
       } else {
-        // 如果没有找到最近的连接点，删除这条曲线
         curves.value.splice(activeCurveIndex.value, 1);
       }
     }
@@ -129,6 +148,7 @@ export function useBezier() {
     }
   };
 
+  // 鼠标移动
   const onMouseMove = (event: MouseEvent) => {
     if (isSelecting.value) {
       const svgRect = svg.value!.getBoundingClientRect();
@@ -139,8 +159,7 @@ export function useBezier() {
       return;
     }
 
-    if (!isDragging.value || !svg.value || activeCurveIndex.value === null)
-      return;
+    if (!isDragging.value || !svg.value || activeCurveIndex.value === null) return;
 
     const svgRect = svg.value.getBoundingClientRect();
     const x = event.clientX - svgRect.left;
@@ -158,6 +177,7 @@ export function useBezier() {
     highlightedConnector.value = nearestConnector ? nearestConnector.id : null;
   };
 
+  // 查找最近的连接点
   const findNearestConnector = () => {
     if (!svg.value || !dragTarget.value) return null;
 
@@ -183,7 +203,6 @@ export function useBezier() {
       if (distance < nearestDistance && distance < 50) {
         nearestDistance = distance;
         nearestPoint = { x: centerX, y: centerY };
-        // 使用可选链操作符来避免 null 错误
         nearestId = `${dragTarget.value?.side === "left" ? "right" : "left"}-${index}`;
       }
     });
@@ -191,19 +210,21 @@ export function useBezier() {
     return nearestPoint ? { point: nearestPoint, id: nearestId } : null;
   };
 
+  // 选择曲线
   const selectCurve = (index: number) => {
     selectedCurveIndices.value = selectedCurveIndices.value.includes(index)
       ? selectedCurveIndices.value.filter((i) => i !== index)
       : [...selectedCurveIndices.value, index];
   };
 
+  // 选择框选中的曲线
   const selectCurvesInSelection = () => {
     const { x: x1, y: y1 } = selectionStart.value;
     const { x: x2, y: y2 } = selectionEnd.value;
     const minX = Math.min(x1, x2);
     const maxX = Math.max(x1, x2);
     const minY = Math.min(y1, y2);
-    const maxY = Math.max(y1, y2);
+    const maxY = Math.min(y1, y2);
 
     selectedCurveIndices.value = curves.value
       .map((curve, index) => {
@@ -222,6 +243,7 @@ export function useBezier() {
       .filter((index) => index !== null) as number[];
   };
 
+  // 开始框选
   const startSelection = (event: MouseEvent) => {
     isSelecting.value = true;
     const svgRect = svg.value!.getBoundingClientRect();
@@ -232,8 +254,19 @@ export function useBezier() {
     selectionEnd.value = selectionStart.value;
   };
 
+  // 处理删除键
   const handleKeyDown = (event: KeyboardEvent) => {
     if (event.key === "Delete" && selectedCurveIndices.value.length > 0) {
+      selectedCurveIndices.value.forEach((index) => {
+        const curve = curves.value[index];
+        if (curve) {
+          const startKey = `${curve.startKey}`;
+          const endKey = `${curve.endKey}`;
+          connectionCounts.value[startKey] = (connectionCounts.value[startKey] || 1) - 1;
+          connectionCounts.value[endKey] = (connectionCounts.value[endKey] || 1) - 1;
+        }
+      });
+
       curves.value = curves.value.filter(
         (_, index) => !selectedCurveIndices.value.includes(index),
       );
@@ -241,19 +274,17 @@ export function useBezier() {
     }
   };
 
+  // 更新曲线位置
   const updateCurvePositions = () => {
     curves.value.forEach((curve, index) => {
-      const leftConnector = document.querySelector(
-        `.left .connector:nth-child(${index + 1})`,
-      ) as HTMLElement | null;
-      const rightConnector = document.querySelector(
-        `.right .connector:nth-child(${index + 1})`,
-      ) as HTMLElement | null;
-
-      if (leftConnector && rightConnector && svg.value) {
+      const { startKey, endKey } = curve;
+      const startEle = document.querySelector(`.left li[data-id="${startKey}"]`);
+      const endEle = document.querySelector(`.right li[data-id="${endKey}"]`);
+      
+      if (startEle && endEle && svg.value) {
         const svgRect = svg.value.getBoundingClientRect();
-        const leftRect = leftConnector.getBoundingClientRect();
-        const rightRect = rightConnector.getBoundingClientRect();
+        const leftRect = startEle.getBoundingClientRect();
+        const rightRect = endEle.getBoundingClientRect();
 
         curve.start = {
           x: leftRect.right - svgRect.left,
@@ -267,47 +298,39 @@ export function useBezier() {
     });
   };
 
+  // 初始化数据
   const initializeData = () => {
     const { data, links } = defConfig.value.initialData;
 
     leftItems.value = data.filter((item) => item.connectorPosition === "left");
-    rightItems.value = data.filter(
-      (item) => item.connectorPosition === "right",
-    );
+    rightItems.value = data.filter((item) => item.connectorPosition === "right");
 
-    // 初始化连接线
-    curves.value = links
+    const validLinks = links.filter(link => /^(\d+)-(\d+)$/.test(link));
+    curves.value = validLinks
       .map((link) => {
         const [leftId, rightId] = link.split("-").map(Number);
         const leftItem = leftItems.value.find((item) => item.id === leftId);
         const rightItem = rightItems.value.find((item) => item.id === rightId);
 
         if (leftItem && rightItem) {
+          connectionCounts.value[leftId] = (connectionCounts.value[leftId] || 0) + 1;
+          connectionCounts.value[rightId] = (connectionCounts.value[rightId] || 0) + 1;
+
           return {
-            start: { x: 0, y: 0 }, // 临时坐标，稍后更新
-            end: { x: 0, y: 0 }, // 临时坐标，稍后更新
+            start: { x: 0, y: 0 },
+            end: { x: 0, y: 0 },
+            startKey: leftId,
+            endKey: rightId
           };
         }
         return null;
       })
-      .filter((curve): curve is Curve => curve !== null);
+      .filter((curve) => curve !== null);
 
-    // 在下一个 tick 更新曲线位置
     nextTick(() => {
       updateCurvePositions();
     });
   };
-
-  onMounted(() => {
-    initializeData();
-    window.addEventListener("resize", updateCurvePositions);
-    window.addEventListener("keydown", handleKeyDown);
-  });
-
-  onUnmounted(() => {
-    window.removeEventListener("resize", updateCurvePositions);
-    window.removeEventListener("keydown", handleKeyDown);
-  });
 
   return {
     bgColor,
@@ -330,5 +353,9 @@ export function useBezier() {
     startSelection,
     updateCurvePositions,
     initializeData,
+    handleKeyDown,
+    isEditable: defConfig.value.isEditable,
+    allowMultipleConnections: defConfig.value.allowMultipleConnections,
+    connectionCounts
   };
 }

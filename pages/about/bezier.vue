@@ -25,10 +25,16 @@
             <li
               v-for="(item, index) in leftItems"
               :key="'left' + item.id"
+              :data-id="item.id"
               class="relative"
             >
               {{ item.name }}
               <div
+                v-if="
+                  isEditable &&
+                  (allowMultipleConnections ||
+                    connectionCounts[`${item.id}`] < 1)
+                "
                 class="connector right"
                 :class="{ highlight: highlightedConnector === `left-${index}` }"
                 @mousedown="startDrag('left', index, $event)"
@@ -77,9 +83,15 @@
             <li
               v-for="(item, index) in rightItems"
               :key="'right' + item.id"
+              :data-id="item.id"
               class="relative"
             >
               <div
+                v-if="
+                  isEditable &&
+                  (allowMultipleConnections ||
+                    connectionCounts[`${item.id}`] < 1)
+                "
                 class="connector left"
                 :class="{
                   highlight: highlightedConnector === `right-${index}`,
@@ -119,11 +131,23 @@ const {
   startSelection,
   updateCurvePositions,
   initializeData,
+  handleKeyDown,
+  isEditable,
+  allowMultipleConnections,
+  connectionCounts,
 } = useBezier();
 
 // 组件挂载后，初始化数据和曲线位置
 onMounted(() => {
   initializeData();
+
+  window.addEventListener("resize", updateCurvePositions);
+  window.addEventListener("keydown", handleKeyDown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener("resize", updateCurvePositions);
+  window.removeEventListener("keydown", handleKeyDown);
 });
 
 // 组件挂载后，初始化曲线位置
@@ -138,12 +162,10 @@ updateCurvePositions();
 
 li {
   cursor: pointer;
-  border: 1px solid #cdcdcd;
-  box-shadow: 0 0 8px rgba($color: #000000, $alpha: 0.1);
-  padding: 10px 8px;
-  margin: 4px;
+  box-shadow: 0 0 8px 2px rgba($color: #000000, $alpha: 0.1);
+  padding: 20px 40px;
+  margin: 20px;
   background-color: white;
-  height: 100px;
   position: relative;
   user-select: none;
 }
