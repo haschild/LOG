@@ -136,18 +136,21 @@ const {
   isEditable,
   allowMultipleConnections,
   connectionCounts,
-} = useBezier();
+  debouncedUpdateCurvePositions,
+} = useBezier((event, data) => {
+  console.log("Complete event:", event, data);
+});
 
 // 组件挂载后，初始化数据和曲线位置
 onMounted(() => {
   initializeData();
 
-  window.addEventListener("resize", _.debounce(updateCurvePositions, 10));
+  window.addEventListener("resize", debouncedUpdateCurvePositions);
   window.addEventListener("keydown", handleKeyDown);
 });
 
 onUnmounted(() => {
-  window.removeEventListener("resize", updateCurvePositions);
+  window.removeEventListener("resize", debouncedUpdateCurvePositions);
   window.removeEventListener("keydown", handleKeyDown);
 });
 </script>

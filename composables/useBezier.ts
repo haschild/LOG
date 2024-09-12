@@ -18,6 +18,12 @@ interface Item {
   id: number;
 }
 
+interface Connector {
+  point: {x: number,y: number}|null;
+  id?: string|null;
+  connector?: HTMLElement|null;
+}
+
 // 防抖函数
 const debounce = (func: Function, wait: number) => {
   let timeout: number | undefined;
@@ -28,7 +34,7 @@ const debounce = (func: Function, wait: number) => {
 };
 
 // 使用贝塞尔曲线的组合函数
-export function useBezier() {
+export function useBezier(emit: (event: string, ...args: any[]) => void) {
   const bgColor = ref("yellow");
   const svg = ref<SVGSVGElement | null>(null);
 
@@ -83,6 +89,16 @@ export function useBezier() {
     return `M ${startX},${startY} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${endX},${endY}`;
   };
 
+  // 触发完成事件
+  const emitCompleteEvent = () => {
+    const links = curves.value.map(curve => `${curve.startKey}-${curve.endKey}`);
+    emit('complete', {
+      startPoints: leftItems.value,
+      endPoints: rightItems.value,
+      links
+    });
+  };
+
   // 开始拖动
   const startDrag = (side: "left" | "right", index: number, event: MouseEvent) => {
     if (!defConfig.value.isEditable) return;
@@ -126,6 +142,7 @@ export function useBezier() {
         if (dragTarget.value?.side === "left") {
           if (defConfig.value.allowMultipleConnections || !curves.value.some(curve => curve.end === nearestConnector.point)) {
             curves.value[activeCurveIndex.value].end = nearestConnector.point;
+            let parentElement = (nearestConnector.connector as HTMLElement).parentElement;
             curves.value[activeCurveIndex.value].endKey = parseInt(nearestConnector.id.split("-")[1]);
             const key = `${nearestConnector.point.x}-${nearestConnector.point.y}`;
             connectionCounts.value[key] = (connectionCounts.value[key] || 0) + 1;
@@ -155,6 +172,8 @@ export function useBezier() {
       isSelecting.value = false;
       selectCurvesInSelection();
     }
+
+    emitCompleteEvent();
   };
 
   // 鼠标移动
@@ -187,7 +206,7 @@ export function useBezier() {
   };
 
   // 查找最近的连接点
-  const findNearestConnector = () => {
+  const findNearestConnector = (): Connector | null => {
     if (!svg.value || !dragTarget.value) return null;
 
     const svgRect = svg.value.getBoundingClientRect();
@@ -200,7 +219,10 @@ export function useBezier() {
     let nearestPoint = null;
     let nearestId = null;
 
-    connectors.forEach((connector, index) => {
+    let connector = null;
+
+    connectors.forEach((connector, index) =>  {
+      
       const rect = connector.getBoundingClientRect();
       const centerX = rect.left + rect.width / 2 - svgRect.left;
       const centerY = rect.top + rect.height / 2 - svgRect.top;
@@ -213,10 +235,11 @@ export function useBezier() {
         nearestDistance = distance;
         nearestPoint = { x: centerX, y: centerY };
         nearestId = `${dragTarget.value?.side === "left" ? "right" : "left"}-${index}`;
+        connector = connector;
       }
     });
 
-    return nearestPoint ? { point: nearestPoint, id: nearestId } : null;
+    return nearestPoint ? { point: nearestPoint, id: nearestId,connector } : null;
   };
 
   // 选择曲线
@@ -280,13 +303,12 @@ export function useBezier() {
         (_, index) => !selectedCurveIndices.value.includes(index),
       );
       selectedCurveIndices.value = [];
+      emitCompleteEvent();
     }
   };
 
   // 更新曲线位置
   const updateCurvePositions = () => {
-    console.log('updateCurvePositions');
-    
     curves.value.forEach((curve, index) => {
       const { startKey, endKey } = curve;
       const startEle = document.querySelector(`.left li[data-id="${startKey}"]`);
@@ -340,6 +362,7 @@ export function useBezier() {
 
     nextTick(() => {
       updateCurvePositions();
+      emitCompleteEvent();
     });
   };
 
