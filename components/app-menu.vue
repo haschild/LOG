@@ -25,6 +25,7 @@
       <el-menu-item index="/posts/grid">grid 布局</el-menu-item>
       <el-menu-item index="/posts/tree">tree 树</el-menu-item>
       <el-menu-item index="/posts/tooltip">对话框</el-menu-item>
+      <el-menu-item index="/posts/animation">动画效果</el-menu-item>
     </el-sub-menu>
   </el-menu>
 </template>
