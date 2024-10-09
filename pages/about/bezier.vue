@@ -48,24 +48,13 @@
           @mousemove="onMouseMove"
           @mouseup="stopDrag"
           @mouseleave="stopDrag"
-          @mousedown.left.prevent="startSelection($event)"
         >
-          <rect
-            v-if="isSelecting"
-            :x="Math.min(selectionStart.x, selectionEnd.x)"
-            :y="Math.min(selectionStart.y, selectionEnd.y)"
-            :width="Math.abs(selectionEnd.x - selectionStart.x)"
-            :height="Math.abs(selectionEnd.y - selectionStart.y)"
-            fill="rgba(0, 0, 255, 0.3)"
-            stroke="blue"
-            stroke-dasharray="5,5"
-          />
           <path
             v-for="(curve, index) in curves"
             :key="index"
             :d="getCurvePath(curve)"
             fill="none"
-            stroke="#3498db"
+            :stroke="defConfig.curveColor"
             stroke-width="2"
             @click="selectCurve(index)"
             :class="{ 'selected-curve': selectedCurveIndices.includes(index) }"
@@ -112,6 +101,7 @@ import { useBezier } from "~/composables/useBezier";
 import _ from "lodash";
 
 const {
+  defConfig,
   bgColor,
   svg,
   leftItems,
@@ -119,17 +109,12 @@ const {
   curves,
   isDragging,
   dragPoint,
-  isSelecting,
-  selectionStart,
-  selectionEnd,
-  selectedCurveIndices,
   highlightedConnector,
   getCurvePath,
   startDrag,
   stopDrag,
   onMouseMove,
   selectCurve,
-  startSelection,
   updateCurvePositions,
   initializeData,
   handleKeyDown,
@@ -137,6 +122,7 @@ const {
   allowMultipleConnections,
   connectionCounts,
   debouncedUpdateCurvePositions,
+  selectedCurveIndices, // 保留选中曲线索引
 } = useBezier((event, data) => {
   console.log("Complete event:", event, data);
 });
@@ -157,13 +143,14 @@ onUnmounted(() => {
 
 <style lang="scss" scoped>
 .textColor {
-  color: rgba(ele.$color-primary, 0.5);
+  /* 使用 CSS 变量绑定 Vue 中的颜色 */
+  color: rgba(var(--el-color-primary-rgb), 0.5);
   background: v-bind(bgColor);
 }
 
 li {
   cursor: pointer;
-  box-shadow: 0 0 8px 2px rgba($color: #000000, $alpha: 0.1);
+  box-shadow: 0 0 8px 2px rgba(0, 0, 0, 0.1);
   padding: 20px 40px;
   margin: 20px;
   background-color: white;
