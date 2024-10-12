@@ -1,14 +1,14 @@
 <template>
   <div
     ref="containerRef"
-    style="width: 50%"
-    class="relative flex w-1/2 justify-between"
-    @click="handleBackgroundClick"
+    :style="{ width: config.containerWidth }"
+    class="relative flex justify-between"
   >
+    <!-- 左侧列表 -->
     <div class="left">
       <ul>
         <li
-          v-for="(item, index) in leftItems"
+          v-for="(item, index) in state.leftItems"
           :key="'left' + item.id"
           :data-id="item.id"
           class="relative"
@@ -16,53 +16,59 @@
           {{ item.name }}
           <div
             v-if="
-              isEditable &&
-              (allowMultipleConnections || connectionCounts[`${item.id}`] < 1)
+              config.isEditable &&
+              (config.allowMultipleConnections ||
+                state.connectionCounts[`${item.id}`] < 1)
             "
             class="connector right"
-            :class="{ highlight: highlightedConnector === `left-${index}` }"
+            :class="{
+              highlight: state.highlightedConnector === `left-${index}`,
+            }"
             @mousedown="startDrag('left', index, $event)"
           ></div>
         </li>
       </ul>
     </div>
+
+    <!-- SVG 区域 -->
     <svg
       class="absolute left-0 top-0 h-full w-full"
-      ref="svg"
+      ref="svgRef"
       @mousemove="onMouseMove"
       @mouseup="stopDrag"
       @mouseleave="stopDrag"
-      @click="handleSvgClick"
     >
       <path
-        v-for="(curve, index) in curves"
+        v-for="(curve, index) in state.curves"
         :key="index"
         :d="getCurvePath(curve)"
         fill="none"
-        :stroke="curve.isInitial ? '#3498db' : '#3498db'"
-        :stroke-opacity="curve.isTemporary ? 0.4 : 0.8"
-        :stroke-width="curve.isTemporary ? 2 : 3"
-        :stroke-dasharray="curve.isInitial ? '5,5' : 'none'"
+        v-bind="getCurveStyle(curve)"
         @click.stop="selectCurve(index, $event)"
-        :class="{ 'selected-curve': selectedCurveIndices.includes(index) }"
+        :class="{
+          'selected-curve': state.selectedCurveIndices.includes(index),
+        }"
       />
     </svg>
+
+    <!-- 右侧列表 -->
     <div class="right">
       <ul>
         <li
-          v-for="(item, index) in rightItems"
+          v-for="(item, index) in state.rightItems"
           :key="'right' + item.id"
           :data-id="item.id"
           class="relative"
         >
           <div
             v-if="
-              isEditable &&
-              (allowMultipleConnections || connectionCounts[`${item.id}`] < 1)
+              config.isEditable &&
+              (config.allowMultipleConnections ||
+                state.connectionCounts[`${item.id}`] < 1)
             "
             class="connector left"
             :class="{
-              highlight: highlightedConnector === `right-${index}`,
+              highlight: state.highlightedConnector === `right-${index}`,
             }"
             @mousedown="startDrag('right', index, $event)"
           ></div>
@@ -78,46 +84,36 @@ import { useBezier } from "~/composables/useBezier.js";
 import { onMounted, onUnmounted, ref } from "vue";
 
 const containerRef = ref(null);
+const svgRef = ref(null);
 
 const emit = defineEmits(["change"]);
 
 const {
-  svg,
-  leftItems,
-  rightItems,
-  curves,
-  selectedCurveIndices,
-  highlightedConnector,
+  state,
+  config,
   getCurvePath,
   startDrag,
   stopDrag,
   onMouseMove,
   selectCurve,
-  initializeData,
+  initialize,
   handleKeyDown,
-  isEditable,
-  allowMultipleConnections,
-  connectionCounts,
   debouncedUpdateCurvePositions,
-  handleBackgroundClick,
-  handleSvgClick,
+  reset,
+  deleteAllConnections,
+  getCurveStyle,
 } = useBezier((event, data) => {
   if (event === "change") {
     emit("change", data);
   }
 });
 
-// 暴露初始化方法
-const initialize = (element, data) => {
-  initializeData(element || containerRef.value, data);
-};
-
-// 组件挂载后，初始化数据和曲线位置
+// 组件挂载后的处理
 onMounted(() => {
-  initialize();
-
   window.addEventListener("resize", debouncedUpdateCurvePositions);
   window.addEventListener("keydown", handleKeyDown);
+
+  state.value.svg = svgRef.value;
 });
 
 onUnmounted(() => {
@@ -128,6 +124,8 @@ onUnmounted(() => {
 // 暴露方法给父组件
 defineExpose({
   initialize,
+  reset,
+  deleteAllConnections,
 });
 </script>
 

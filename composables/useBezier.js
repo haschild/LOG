@@ -1,3 +1,53 @@
+/**
+ * useBezier - 贝塞尔曲线连接组件
+ *
+ * API:
+ * 1. initialize(data, options)
+ *    初始化组件
+ *    @param {Object} data - 初始化数据，包含 data（列表项）和 links（连接）
+ *    @param {Object} options - 配置选项
+ *
+ * 2. reset()
+ *    重置连接到初始状态
+ *
+ * 3. deleteAllConnections()
+ *    删除所有连接
+ *
+ * 4. getCurvePath(curve)
+ *    获取曲线路径
+ *    @param {Object} curve - 曲线对象
+ *    @returns {string} SVG 路径字符串
+ *
+ * 5. getCurveStyle(curve)
+ *    获取曲线样式
+ *    @param {Object} curve - 曲线对象
+ *    @returns {Object} 样式对象
+ *
+ * 配置选项 (options):
+ * - isEditable: boolean - 是否可编辑
+ * - curveColor: string - 曲线颜色
+ * - initialCurveColor: string - 初始曲线颜色
+ * - allowMultipleConnections: boolean - 是否允许多重连接
+ * - curveStrokeWidth: number - 曲线宽度
+ * - initialCurveStrokeWidth: number - 初始曲线宽度
+ * - curveOpacity: number - 曲线不透明度
+ * - initialCurveOpacity: number - 初始曲线不透明度
+ * - connectorSize: number - 连接点大小
+ * - highlightedConnectorSize: number - 高亮连接点大小
+ * - connectorColor: string - 连接点颜色
+ * - highlightedConnectorColor: string - 高亮连接点颜色
+ * - containerWidth: string - 容器宽度
+ * - initialCurveStyle: 'dashed' | 'solid' - 初始曲线样式
+ * - modifiedCurveStyle: 'dashed' | 'solid' - 修改后曲线样式
+ *
+ * 事件:
+ * - change: 当连接发生变化时触发，返回最新的连接数据
+ *
+ * 状态:
+ * - state: 包含组件的所有响应式状态
+ * - config: 包含组件的所有配置选项
+ */
+
 import { ref, computed, nextTick } from "vue";
 import { debounce } from "lodash-es";
 
@@ -18,22 +68,25 @@ export function useBezier(emit) {
     containerElement: null,
   });
 
-  const config = ref({
+  const defaultConfig = {
     isEditable: true,
     curveColor: "#3498db",
+    initialCurveColor: "#3498db",
     allowMultipleConnections: true,
-    initialData: {
-      data: [
-        { name: "选项1", id: 1 },
-        { name: "选项2", id: 2 },
-        { name: "选项3", id: 3 },
-        { name: "选项4", id: 4 },
-        { name: "选项5", id: 5 },
-        { name: "选项6", id: 6 },
-      ],
-      links: ["1-6", "2-4", "3-5", "1-4"],
-    },
-  });
+    curveStrokeWidth: 3,
+    initialCurveStrokeWidth: 2,
+    curveOpacity: 0.8,
+    initialCurveOpacity: 0.6,
+    connectorSize: 10,
+    highlightedConnectorSize: 14,
+    connectorColor: "#3498db",
+    highlightedConnectorColor: "#e74c3c",
+    containerWidth: "100%",
+    initialCurveStyle: "dashed",
+    modifiedCurveStyle: "solid",
+  };
+
+  const config = ref(defaultConfig);
 
   const getCurvePath = (curve) => {
     const { x: startX, y: startY } = curve.start;
@@ -67,7 +120,7 @@ export function useBezier(emit) {
       end: startPoint,
       startKey: side === "left" ? id : null,
       endKey: side === "right" ? id : null,
-      isInitial: false,
+      isInitial: false, // 确保新添加的曲线不是初始曲线
       isTemporary: true,
     };
 
@@ -279,11 +332,7 @@ export function useBezier(emit) {
     }
   };
 
-  const initializeData = (element, data) => {
-    if (element) {
-      state.value.containerElement = element;
-    }
-
+  const initializeData = (data) => {
     if (data) {
       config.value.initialData = data;
     }
@@ -314,7 +363,7 @@ export function useBezier(emit) {
             end: { x: 0, y: 0 },
             startKey: leftId,
             endKey: rightId,
-            isInitial: true,
+            isInitial: true, // 确保这里设置为 true
           };
         }
         return null;
@@ -339,6 +388,54 @@ export function useBezier(emit) {
     });
   };
 
+  const initialize = (data, options = {}) => {
+    // 合并用户提供的选项
+    Object.assign(config.value, options);
+
+    initializeData(data);
+    nextTick(updateCurvePositions);
+  };
+
+  const reset = () => {
+    state.value.curves = JSON.parse(JSON.stringify(state.value.initialCurves));
+    state.value.connectionCounts = {};
+    state.value.curves.forEach((curve) => {
+      updateConnectionCounts(curve.startKey, curve.endKey);
+      curve.isInitial = true; // 确保重置时所有曲线都被标记为初始曲线
+    });
+    nextTick(updateCurvePositions);
+    emitChangeEvent();
+  };
+
+  const deleteAllConnections = () => {
+    state.value.curves = [];
+    state.value.connectionCounts = {};
+    emitChangeEvent();
+  };
+
+  const getCurveStyle = (curve) => {
+    const isInitial = curve.isInitial;
+    const style = isInitial
+      ? config.value.initialCurveStyle
+      : config.value.modifiedCurveStyle;
+    const baseStyle = {
+      strokeWidth: isInitial
+        ? config.value.initialCurveStrokeWidth
+        : config.value.curveStrokeWidth,
+      strokeOpacity: isInitial
+        ? config.value.initialCurveOpacity
+        : config.value.curveOpacity,
+    };
+
+    return {
+      stroke: isInitial
+        ? config.value.initialCurveColor
+        : config.value.curveColor,
+      strokeDasharray: style === "dashed" ? "5,5" : "none",
+      ...baseStyle,
+    };
+  };
+
   return {
     state,
     config,
@@ -348,9 +445,12 @@ export function useBezier(emit) {
     onMouseMove,
     selectCurve,
     updateCurvePositions,
-    initializeData,
     handleKeyDown,
     debouncedUpdateCurvePositions,
     emitChangeEvent,
+    initialize,
+    reset,
+    deleteAllConnections,
+    getCurveStyle,
   };
 }
