@@ -85,6 +85,7 @@ export default defineNuxtConfig({
         prependPath: true,
       },
     },
+    // plugins: ['~/server/plugins/mock.js']
   },
 
 
@@ -155,6 +156,6 @@ export default defineNuxtConfig({
     pinia: {
       autoImports: ['defineStore', 'acceptHMRUpdate'],
     },
-  
+
   
 })

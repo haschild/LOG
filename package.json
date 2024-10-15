@@ -17,6 +17,7 @@
     "@vueuse/core": "^10.11.0",
     "@vueuse/nuxt": "^10.11.0",
     "animate.css": "^4.1.1",
+    "axios": "^1.7.7",
     "lodash": "^4.17.21",
     "nuxt": "^3.12.4",
     "pinia": "^2.2.0",
@@ -32,6 +33,7 @@
     "@nuxtjs/color-mode": "^3.3.2",
     "@nuxtjs/tailwindcss": "^6.12.1",
     "element-plus": "^2.7.8",
+    "mockjs": "^1.1.0",
     "prettier": "^3.3.3",
     "prettier-plugin-tailwindcss": "^0.6.5",
     "sass": "^1.77.8"

@@ -31,6 +31,8 @@
         >Password</label
       >
     </div>
+
+    <el-button type="primary" @click="handleSubmit">提交</el-button>
   </form>
   <div class="line-animation">
     <p>样式1</p>
@@ -66,6 +68,12 @@
     </ul>
   </div>
 </template>
+<script setup>
+const handleSubmit = async () => {
+  const res = await $fetch("/api/example");
+  console.log(res);
+};
+</script>
 <style lang="scss">
 .line-animation {
   p {
