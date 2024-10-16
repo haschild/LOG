@@ -13,6 +13,8 @@
           删除所有连接
         </button>
       </div>
+
+      <AppBezierConnector></AppBezierConnector>
     </div>
   </section>
 </template>
