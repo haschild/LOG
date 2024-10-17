@@ -54,12 +54,9 @@ onMounted(() => {
       },
       {
         isEditable: true,
-        curveColor: "#2ecc71",
-        initialCurveColor: "#3498db",
         allowMultipleConnections: true,
         containerWidth: "80%",
-        initialCurveStyle: "dashed",
-        modifiedCurveStyle: "solid",
+        curveStyle: "dashed",
       },
     );
   }

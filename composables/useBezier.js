@@ -18,7 +18,6 @@
  *    @param {Object} curve - 曲线对象
  *    @returns {string} SVG 路径字符串
  *
- * 5. getCurveStyle(curve)
  *    获取曲线样式
  *    @param {Object} curve - 曲线对象
  *    @returns {Object} 样式对象
@@ -26,19 +25,14 @@
  * 配置选项 (options):
  * - isEditable: boolean - 是否可编辑
  * - curveColor: string - 曲线颜色
- * - initialCurveColor: string - 初始曲线颜色
  * - allowMultipleConnections: boolean - 是否允许多重连接
  * - curveStrokeWidth: number - 曲线宽度
- * - initialCurveStrokeWidth: number - 初始曲线宽度
  * - curveOpacity: number - 曲线不透明度
- * - initialCurveOpacity: number - 初始曲线不透明度
  * - connectorSize: number - 连接点大小
  * - highlightedConnectorSize: number - 高亮连接点大小
  * - connectorColor: string - 连接点颜色
  * - highlightedConnectorColor: string - 高亮连接点颜色
- * - containerWidth: string - 容器宽度
- * - initialCurveStyle: 'dashed' | 'solid' - 初始曲线样式
- * - modifiedCurveStyle: 'dashed' | 'solid' - 修改后曲线样式
+ * - curveStyle: 'dashed' | 'solid' - 曲线样式
  *
  * 事件:
  * - change: 当连接发生变化时触发，返回最新的连接数据
@@ -56,6 +50,8 @@ export function useBezier(emit) {
     svg: null,
     leftItems: [],
     rightItems: [],
+
+    // 所有的连接线集合
     curves: [],
     isDragging: false,
     dragTarget: null,
@@ -71,19 +67,15 @@ export function useBezier(emit) {
   const defaultConfig = {
     isEditable: true,
     curveColor: "#3498db",
-    initialCurveColor: "#3498db",
+    curveStyle: "dashed", // dashed:虚线， solid：实线
     allowMultipleConnections: true,
-    curveStrokeWidth: 3,
-    initialCurveStrokeWidth: 2,
+    curveWidth: 3,
     curveOpacity: 0.8,
-    initialCurveOpacity: 0.6,
     connectorSize: 10,
+    curveDirection: "both", // leftToRight:从左到右，rightToLeft:从右到左，both:双向
     highlightedConnectorSize: 14,
     connectorColor: "#3498db",
     highlightedConnectorColor: "#e74c3c",
-    containerWidth: "100%",
-    initialCurveStyle: "dashed",
-    modifiedCurveStyle: "solid",
   };
 
   const config = ref(defaultConfig);
@@ -95,11 +87,37 @@ export function useBezier(emit) {
     const controlY1 = startY;
     const controlX2 = endX - (endX - startX) / 3;
     const controlY2 = endY;
-    return `M ${startX},${startY} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${endX},${endY}`;
+
+    // 生成基本的曲线路径
+    let path = `M ${startX},${startY} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${endX},${endY}`;
+
+    // 移除箭头的逻辑
+    if (config.value.curveDirection !== "both") {
+      const arrowSize = 10; // 箭头大小
+      const angle = Math.atan2(endY - startY, endX - startX); // 计算角度
+      const arrowX1 = endX - arrowSize * Math.cos(angle - Math.PI / 6); // 箭头左边
+      const arrowY1 = endY - arrowSize * Math.sin(angle - Math.PI / 6);
+      const arrowX2 = endX - arrowSize * Math.cos(angle + Math.PI / 6); // 箭头右边
+      const arrowY2 = endY - arrowSize * Math.sin(angle + Math.PI / 6);
+
+      // 添加箭头路径
+      path += ` M ${endX},${endY} L ${arrowX1},${arrowY1} M ${endX},${endY} L ${arrowX2},${arrowY2}`;
+    }
+
+    return path;
   };
 
   const startDrag = (side, index, event) => {
     if (!config.value.isEditable) return;
+
+    // 根据方向判断，是否可以点击
+    if (
+      (side === "left" && config.value.curveDirection === "rightToLeft") ||
+      (side === "right" && config.value.curveDirection === "leftToRight")
+    ) {
+      return;
+    }
+
     const parentElement = event.target.parentElement;
     if (!parentElement) return;
 
@@ -120,8 +138,8 @@ export function useBezier(emit) {
       end: startPoint,
       startKey: side === "left" ? id : null,
       endKey: side === "right" ? id : null,
-      isInitial: false, // 确保新添加的曲线不是初始曲线
       isTemporary: true,
+      curveStyle: config.value.curveStyle, // 默认取用配置
     };
 
     state.value.curves.push(newCurve);
@@ -152,6 +170,10 @@ export function useBezier(emit) {
       startKey = parseInt(nearestConnector.id.split("-")[1]);
       endKey = curves[activeCurveIndex].endKey;
     }
+
+    // 移除 curveDirection 的逻辑
+    curves[activeCurveIndex].startKey = startKey;
+    curves[activeCurveIndex].endKey = endKey;
 
     const existingConnectionIndex = findExistingConnectionIndex(
       startKey,
@@ -363,7 +385,8 @@ export function useBezier(emit) {
             end: { x: 0, y: 0 },
             startKey: leftId,
             endKey: rightId,
-            isInitial: true, // 确保这里设置为 true
+
+            curveStyle: config.value.curveStyle, // 默认取用配置
           };
         }
         return null;
@@ -401,7 +424,6 @@ export function useBezier(emit) {
     state.value.connectionCounts = {};
     state.value.curves.forEach((curve) => {
       updateConnectionCounts(curve.startKey, curve.endKey);
-      curve.isInitial = true; // 确保重置时所有曲线都被标记为初始曲线
     });
     nextTick(updateCurvePositions);
     emitChangeEvent();
@@ -413,26 +435,18 @@ export function useBezier(emit) {
     emitChangeEvent();
   };
 
+  /**
+   *
+   * @param {Object} curve
+   * @returns 返回连接线样式
+   */
   const getCurveStyle = (curve) => {
-    const isInitial = curve.isInitial;
-    const style = isInitial
-      ? config.value.initialCurveStyle
-      : config.value.modifiedCurveStyle;
-    const baseStyle = {
-      strokeWidth: isInitial
-        ? config.value.initialCurveStrokeWidth
-        : config.value.curveStrokeWidth,
-      strokeOpacity: isInitial
-        ? config.value.initialCurveOpacity
-        : config.value.curveOpacity,
-    };
-
+    let { curveColor, curveOpacity, curveWidth } = config.value;
     return {
-      stroke: isInitial
-        ? config.value.initialCurveColor
-        : config.value.curveColor,
-      strokeDasharray: style === "dashed" ? "5,5" : "none",
-      ...baseStyle,
+      stroke: curveColor,
+      "stroke-dasharray": curve.curveStyle === "dashed" ? "5,5" : "none", // 控制虚或实线
+      "stroke-width": curveWidth,
+      "stroke-opacity": curveOpacity,
     };
   };
 
