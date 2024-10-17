@@ -102,6 +102,7 @@ const {
   reset,
   deleteAllConnections,
   getCurveStyle,
+  addBatchConnections,
 } = useBezier((event, data) => {
   if (event === "change") {
     emit("change", data);
@@ -124,6 +125,7 @@ onUnmounted(() => {
 // 暴露方法给父组件
 defineExpose({
   initialize,
+  addBatchConnections,
   reset,
   deleteAllConnections,
 });

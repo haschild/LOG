@@ -9,9 +9,12 @@
         <button @click="resetConnections" class="btn-primary mr-2">
           重置连接
         </button>
-        <button @click="deleteAllConnections" class="btn-secondary">
+        <el-button @click="deleteAllConnections" type="danger">
           删除所有连接
-        </button>
+        </el-button>
+        <el-button @click="addConnections" type="primary">
+          批量添加连接
+        </el-button>
       </div>
 
       <AppBezierConnector></AppBezierConnector>
@@ -37,6 +40,18 @@ const deleteAllConnections = () => {
   bezierRef.value.deleteAllConnections();
 };
 
+// 批量添加连接线的方法
+const addConnections = () => {
+  const data = {
+    links: ["1-6", "2-4", "3-5"], // 示例连接关系
+  };
+  const options = {
+    curveStyle: "solid", // 或 "solid"
+    curveDirection: "leftToRight", // 方向
+  };
+  bezierRef.value.addBatchConnections(data, options, false); // true 表示清空当前连接
+};
+
 onMounted(() => {
   // 初始化贝塞尔曲线
   if (bezierRef.value) {
@@ -50,13 +65,13 @@ onMounted(() => {
           { name: "选项5", id: 5 },
           { name: "选项6", id: 6 },
         ],
-        links: ["1-6", "2-4", "3-5", "1-4"],
+        links: ["1-4", "2-5", "3-6"],
       },
       {
         isEditable: true,
         allowMultipleConnections: true,
-        containerWidth: "80%",
         curveStyle: "dashed",
+        curveDirection: "leftToRight",
       },
     );
   }

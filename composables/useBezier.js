@@ -69,8 +69,8 @@ export function useBezier(emit) {
     curveColor: "#3498db",
     curveStyle: "dashed", // dashed:虚线， solid：实线
     allowMultipleConnections: true,
-    curveWidth: 3,
-    curveOpacity: 0.8,
+    curveWidth: 2,
+    curveOpacity: 0.5,
     connectorSize: 10,
     curveDirection: "both", // leftToRight:从左到右，rightToLeft:从右到左，both:双向
     highlightedConnectorSize: 14,
@@ -88,20 +88,33 @@ export function useBezier(emit) {
     const controlX2 = endX - (endX - startX) / 3;
     const controlY2 = endY;
 
+    // 设置偏移量
+    const offset = 10;
     // 生成基本的曲线路径
-    let path = `M ${startX},${startY} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${endX},${endY}`;
+    let path = `M ${startX},${startY} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${endX - offset},${endY}`;
 
-    // 移除箭头的逻辑
+    // 根据 curveDirection 添加箭头
+    const arrowSize = 26; // 箭头大小
     if (config.value.curveDirection !== "both") {
-      const arrowSize = 10; // 箭头大小
       const angle = Math.atan2(endY - startY, endX - startX); // 计算角度
-      const arrowX1 = endX - arrowSize * Math.cos(angle - Math.PI / 6); // 箭头左边
-      const arrowY1 = endY - arrowSize * Math.sin(angle - Math.PI / 6);
-      const arrowX2 = endX - arrowSize * Math.cos(angle + Math.PI / 6); // 箭头右边
-      const arrowY2 = endY - arrowSize * Math.sin(angle + Math.PI / 6);
+
+      // 计算箭头的起始位置
+      let adjustedEndX, adjustedEndY;
+
+      adjustedEndX = endX - offset;
+      adjustedEndY = endY;
+
+      const arrowX1 =
+        adjustedEndX - (arrowSize / 2) * Math.cos(angle - Math.PI / 6); // 箭头左边
+      const arrowY1 =
+        adjustedEndY - (arrowSize / 2) * Math.sin(angle - Math.PI / 6);
+      const arrowX2 =
+        adjustedEndX - (arrowSize / 2) * Math.cos(angle + Math.PI / 6); // 箭头右边
+      const arrowY2 =
+        adjustedEndY - (arrowSize / 2) * Math.sin(angle + Math.PI / 6);
 
       // 添加箭头路径
-      path += ` M ${endX},${endY} L ${arrowX1},${arrowY1} M ${endX},${endY} L ${arrowX2},${arrowY2}`;
+      path += ` M ${adjustedEndX},${adjustedEndY} L ${arrowX1},${arrowY1} M ${adjustedEndX},${adjustedEndY} L ${arrowX2},${arrowY2}`;
     }
 
     return path;
@@ -450,6 +463,32 @@ export function useBezier(emit) {
     };
   };
 
+  const addBatchConnections = (data, options, clearExisting = false) => {
+    if (clearExisting) {
+      state.value.curves = []; // 清空当前所有连接线
+      state.value.connectionCounts = {};
+    }
+
+    const { links } = data;
+
+    links.forEach((link) => {
+      const [startKey, endKey] = link.split("-").map(Number);
+      const newCurve = {
+        startKey,
+        endKey,
+        start: { x: 0, y: 0 }, // 初始位置
+        end: { x: 0, y: 0 }, // 初始位置
+        curveStyle: options.curveStyle || config.value.curveStyle,
+        curveDirection: options.curveDirection || config.value.curveDirection,
+      };
+      state.value.curves.push(newCurve);
+      updateConnectionCounts(startKey, endKey);
+    });
+
+    nextTick(updateCurvePositions);
+    emitChangeEvent();
+  };
+
   return {
     state,
     config,
@@ -466,5 +505,6 @@ export function useBezier(emit) {
     reset,
     deleteAllConnections,
     getCurveStyle,
+    addBatchConnections,
   };
 }
