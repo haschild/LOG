@@ -88,40 +88,26 @@ export function useBezier(emit) {
     const controlX2 = endX - (endX - startX) / 3;
     const controlY2 = endY;
 
-    // 设置偏移量
-    const offset = 10;
     // 生成基本的曲线路径
-    let path = `M ${startX},${startY} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${endX - offset},${endY}`;
+    let path = `M ${startX},${startY} C ${controlX1},${controlY1} ${controlX2},${controlY2} ${endX},${endY}`;
 
-    // 根据 curveDirection 添加箭头
-    const arrowSize = 26; // 箭头大小
-    if (config.value.curveDirection !== "both") {
-      const angle = Math.atan2(endY - startY, endX - startX); // 计算角度
+    // 根据 curveDirection 添加 marker
+    let marker = "";
+    if (curve.curveDirection === "rightToLeft") {
+      marker = "url(#marketElement)"; // 向左的箭头
+    } else if (curve.curveDirection === "leftToRight") {
+      marker = "url(#marketElement)"; // 向右的箭头
+    } // 如果是 'both'，则不添加 marker
 
-      // 计算箭头的起始位置
-      let adjustedEndX, adjustedEndY;
-
-      adjustedEndX = endX - offset;
-      adjustedEndY = endY;
-
-      const arrowX1 =
-        adjustedEndX - (arrowSize / 2) * Math.cos(angle - Math.PI / 6); // 箭头左边
-      const arrowY1 =
-        adjustedEndY - (arrowSize / 2) * Math.sin(angle - Math.PI / 6);
-      const arrowX2 =
-        adjustedEndX - (arrowSize / 2) * Math.cos(angle + Math.PI / 6); // 箭头右边
-      const arrowY2 =
-        adjustedEndY - (arrowSize / 2) * Math.sin(angle + Math.PI / 6);
-
-      // 添加箭头路径
-      path += ` M ${adjustedEndX},${adjustedEndY} L ${arrowX1},${arrowY1} M ${adjustedEndX},${adjustedEndY} L ${arrowX2},${arrowY2}`;
-    }
-
-    return path;
+    return {
+      path,
+      marker,
+    };
   };
 
   const startDrag = (side, index, event) => {
     if (!config.value.isEditable) return;
+    console.log(side, config.value.curveDirection, "000");
 
     // 根据方向判断，是否可以点击
     if (
@@ -372,43 +358,43 @@ export function useBezier(emit) {
       config.value.initialData = data;
     }
 
-    const { data: itemsData, links } = config.value.initialData;
-    const leftIds = new Set(
-      links.map((link) => link.split("-")[0]).map(Number),
-    );
+    const { rightItems, leftItems, links } = config.value.initialData;
 
-    state.value.leftItems = itemsData.filter((item) => leftIds.has(item.id));
-    state.value.rightItems = itemsData.filter((item) => !leftIds.has(item.id));
+    state.value.leftItems = leftItems;
+    state.value.rightItems = rightItems;
+    if (Array.isArray(links) && links.length > 0) {
+      state.value.curves = links
+        .filter((link) => /^(\d+)-(\d+)$/.test(link))
+        .map((link) => {
+          const [leftId, rightId] = link.split("-").map(Number);
+          const leftItem = state.value.leftItems.find(
+            (item) => item.id === leftId,
+          );
+          const rightItem = state.value.rightItems.find(
+            (item) => item.id === rightId,
+          );
 
-    state.value.curves = links
-      .filter((link) => /^(\d+)-(\d+)$/.test(link))
-      .map((link) => {
-        const [leftId, rightId] = link.split("-").map(Number);
-        const leftItem = state.value.leftItems.find(
-          (item) => item.id === leftId,
-        );
-        const rightItem = state.value.rightItems.find(
-          (item) => item.id === rightId,
-        );
+          if (leftItem && rightItem) {
+            updateConnectionCounts(leftId, rightId);
+            return {
+              start: { x: 0, y: 0 },
+              end: { x: 0, y: 0 },
+              startKey: leftId,
+              endKey: rightId,
 
-        if (leftItem && rightItem) {
-          updateConnectionCounts(leftId, rightId);
-          return {
-            start: { x: 0, y: 0 },
-            end: { x: 0, y: 0 },
-            startKey: leftId,
-            endKey: rightId,
+              curveStyle: config.value.curveStyle, // 默认取用配置
+            };
+          }
+          return null;
+        })
+        .filter((curve) => curve !== null);
 
-            curveStyle: config.value.curveStyle, // 默认取用配置
-          };
-        }
-        return null;
-      })
-      .filter((curve) => curve !== null);
+      state.value.initialCurves = JSON.parse(
+        JSON.stringify(state.value.curves),
+      );
 
-    state.value.initialCurves = JSON.parse(JSON.stringify(state.value.curves));
-
-    nextTick(updateCurvePositions);
+      nextTick(updateCurvePositions);
+    }
   };
 
   const debouncedUpdateCurvePositions = debounce(updateCurvePositions, 200);
@@ -457,7 +443,7 @@ export function useBezier(emit) {
     let { curveColor, curveOpacity, curveWidth } = config.value;
     return {
       stroke: curveColor,
-      "stroke-dasharray": curve.curveStyle === "dashed" ? "5,5" : "none", // 控制虚或实线
+      "stroke-dasharray": curve.curveStyle === "dashed" ? "5,2" : "none", // 控制虚或实线
       "stroke-width": curveWidth,
       "stroke-opacity": curveOpacity,
     };
@@ -489,6 +475,18 @@ export function useBezier(emit) {
     emitChangeEvent();
   };
 
+  const resetConfig = (options = {}) => {
+    Object.assign(config.value, defaultConfig, options);
+  };
+
+  const connectEnable = () => {
+    return (
+      config.value.isEditable &&
+      (config.value.allowMultipleConnections ||
+        state.value.connectionCounts[`${item.id}`] < 1)
+    );
+  };
+
   return {
     state,
     config,
@@ -506,5 +504,7 @@ export function useBezier(emit) {
     deleteAllConnections,
     getCurveStyle,
     addBatchConnections,
+    resetConfig,
+    connectEnable,
   };
 }

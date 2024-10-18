@@ -1,7 +1,7 @@
-# AppBezierConnector 组件 API 文档
+# app-bezier 组件 API 文档
 
 ## 概述
-`AppBezierConnector` 是一个用于创建和显示两列项目之间贝塞尔曲线连接的 Vue 组件。它允许用户可视化和管理项目之间的关系。
+`app-bezier` 是一个用于创建和显示两列项目之间贝塞尔曲线连接的 Vue 组件。它允许用户可视化和管理项目之间的关系。
 
 ## Props
 

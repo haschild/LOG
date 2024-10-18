@@ -15,21 +15,17 @@
         >
           {{ item.name }}
           <div
-            v-if="
-              config.isEditable &&
-              (config.allowMultipleConnections ||
-                state.connectionCounts[`${item.id}`] < 1)
-            "
+            v-if="connectEnable()"
             class="connector right"
             :class="{
               highlight: state.highlightedConnector === `left-${index}`,
+              enable: connectEnable(),
             }"
             @mousedown="startDrag('left', index, $event)"
           ></div>
         </li>
       </ul>
     </div>
-
     <!-- SVG 区域 -->
     <svg
       class="absolute left-0 top-0 h-full w-full"
@@ -38,10 +34,40 @@
       @mouseup="stopDrag"
       @mouseleave="stopDrag"
     >
+      <marker
+        id="arrow"
+        viewBox="0 0 10 10"
+        refX="10"
+        refY="5"
+        markerWidth="4"
+        markerHeight="4"
+        orient="auto-start-reverse"
+      >
+        <path d="M 0 0 L 10 5 L 0 10 z" fill="#3498db" stroke="#3498db" />
+      </marker>
+      <defs>
+        <marker
+          id="arrow"
+          viewBox="0 0 10 10"
+          refX="5"
+          refY="5"
+          markerWidth="6"
+          markerHeight="6"
+          orient="auto-start-reverse"
+        >
+          <path d="M 0 0 L 10 5 L 0 10 z" fill="#3498db" stroke="#3498db" />
+        </marker>
+      </defs>
       <path
         v-for="(curve, index) in state.curves"
         :key="index"
-        :d="getCurvePath(curve)"
+        :d="getCurvePath(curve).path"
+        :marker-end="
+          config.curveDirection === 'leftToRight' ? 'url(#arrow)' : ''
+        "
+        :marker-start="
+          config.curveDirection === 'rightToLeft' ? 'url(#arrow)' : ''
+        "
         fill="none"
         v-bind="getCurveStyle(curve)"
         @click.stop="selectCurve(index, $event)"
@@ -61,14 +87,11 @@
           class="relative"
         >
           <div
-            v-if="
-              config.isEditable &&
-              (config.allowMultipleConnections ||
-                state.connectionCounts[`${item.id}`] < 1)
-            "
+            v-if="connectEnable()"
             class="connector left"
             :class="{
               highlight: state.highlightedConnector === `right-${index}`,
+              enable: connectEnable(),
             }"
             @mousedown="startDrag('right', index, $event)"
           ></div>
@@ -103,6 +126,8 @@ const {
   deleteAllConnections,
   getCurveStyle,
   addBatchConnections,
+  resetConfig,
+  connectEnable,
 } = useBezier((event, data) => {
   if (event === "change") {
     emit("change", data);
@@ -128,6 +153,7 @@ defineExpose({
   addBatchConnections,
   reset,
   deleteAllConnections,
+  resetConfig, // Add this line
 });
 </script>
 
@@ -140,6 +166,12 @@ li {
   background-color: white;
   position: relative;
   user-select: none;
+
+  &:hover {
+    .connector.enable {
+      opacity: 1; // 在悬停时显示连接点
+    }
+  }
 }
 
 .connector {
@@ -152,6 +184,7 @@ li {
   transform: translateY(-50%);
   cursor: pointer;
   transition: all 0.3s ease;
+  opacity: 0;
 
   &.left {
     left: -5px;
@@ -177,6 +210,6 @@ li {
 
 .left,
 .right {
-  z-index: 1;
+  z-index: 4;
 }
 </style>
