@@ -58,7 +58,7 @@ export function useBezier(emit) {
     dragPoint: { x: 0, y: 0 },
     activeCurveIndex: null,
     highlightedConnector: null,
-    selectedCurveIndices: [],
+    selectedCurveList: [],
     connectionCounts: {},
     initialCurves: [],
     containerElement: null,
@@ -76,6 +76,7 @@ export function useBezier(emit) {
     highlightedConnectorSize: 14,
     connectorColor: "#3498db",
     highlightedConnectorColor: "#e74c3c",
+    key: null,
   };
 
   const config = ref(defaultConfig);
@@ -297,21 +298,22 @@ export function useBezier(emit) {
       : null;
   };
 
-  const selectCurve = (index) => {
-    state.value.selectedCurveIndices = [index];
+  const selectCurve = (curve) => {
+    let key = config.value.key;
+    let keys = state.value.selectedCurveList.map((item) => item[key]);
+    state.value.selectedCurveList = !keys.includes(key) ? [curve] : [];
   };
 
   const handleKeyDown = (event) => {
-    if (event.key === "Delete" && state.value.selectedCurveIndices.length > 0) {
-      deleteCurves(state.value.selectedCurveIndices);
-      state.value.selectedCurveIndices = [];
+    if (event.key === "Delete" && state.value.selectedCurveList.length > 0) {
+      deleteCurves(state.value.selectedCurveList);
+      state.value.selectedCurveList = [];
       emitChangeEvent();
     }
   };
 
   const deleteCurves = (indices) => {
-    indices.forEach((index) => {
-      const curve = state.value.curves[index];
+    indices.forEach((curve) => {
       if (curve) {
         updateConnectionCountsOnDelete(curve.startKey, curve.endKey);
       }
@@ -430,6 +432,7 @@ export function useBezier(emit) {
 
   const deleteAllConnections = () => {
     state.value.curves = [];
+    state.value.selectedCurveList = [];
     state.value.connectionCounts = {};
     emitChangeEvent();
   };

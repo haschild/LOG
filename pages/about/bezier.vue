@@ -69,7 +69,7 @@ const formData = ref({
   isEditable: true,
   allowMultipleConnections: true,
   curveStyle: "solid",
-  curveDirection: "both",
+  curveDirection: "leftToRight",
   isDeletable: true,
 });
 
@@ -136,10 +136,16 @@ const initializeBezier = () => {
       allowMultipleConnections: true,
       curveStyle: "solid",
       curveDirection: "both",
-      key: "id",
+      key: "id", // 数据唯一性
     },
   );
 };
+
+// formData 数据发生变化
+watch(formData, () => {
+  resetConfig();
+});
+
 onMounted(() => {
   // 初始化贝塞尔曲线
   if (bezierRef.value) {

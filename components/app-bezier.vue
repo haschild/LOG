@@ -33,6 +33,7 @@
       @mousemove="onMouseMove"
       @mouseup="stopDrag"
       @mouseleave="stopDrag"
+      @mousedown="selectCurve"
     >
       <marker
         id="arrow"
@@ -70,8 +71,9 @@
         "
         fill="none"
         v-bind="getCurveStyle(curve)"
-        @click.stop="selectCurve(index, $event)"
+        @click.stop="selectCurve(curve)"
         :class="{
+          curve: true,
           'selected-curve': state.selectedCurveIndices.includes(index),
         }"
       />
@@ -176,8 +178,8 @@ li {
 
 .connector {
   position: absolute;
-  width: 10px;
-  height: 10px;
+  width: 12px;
+  height: 12px;
   background-color: #3498db;
   border-radius: 50%;
   top: 50%;
@@ -206,6 +208,10 @@ li {
 .selected-curve {
   filter: drop-shadow(0 0 3px #3498db);
   stroke-width: 3 !important;
+}
+.curve:hover {
+  stroke-width: 4 !important;
+  stroke-opacity: 0.4 !important;
 }
 
 .left,
