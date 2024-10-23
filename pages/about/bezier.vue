@@ -34,12 +34,6 @@
         </el-form-item>
       </el-form>
 
-      <app-bezier
-        class="w-full"
-        ref="bezierRef"
-        @change="handleBezierChange"
-      ></app-bezier>
-
       <div class="mt-4">
         <button @click="resetConnections" class="btn-primary mr-2">
           重置连接
@@ -57,6 +51,12 @@
 
         <!-- Updated button to reset configuration using bezierRef -->
         <el-button @click="resetConfig" type="warning"> 重置配置 </el-button>
+
+        <app-bezier
+          class="w-full"
+          ref="bezierRef"
+          @change="handleBezierChange"
+        ></app-bezier>
       </div>
     </div>
   </section>
@@ -129,20 +129,18 @@ const initializeBezier = () => {
         { name: "选项5", id: 5 },
         { name: "选项6", id: 6 },
       ],
-      // links: ["1-4", "2-5", "3-6"],
+      links: ["1-4", "2-5", "3-6"],
     },
     {
-      isEditable: true,
-      allowMultipleConnections: true,
-      curveStyle: "solid",
-      curveDirection: "both",
+      ...formData.value,
+      curveStyle: "dashed",
       key: "id", // 数据唯一性
     },
   );
 };
 
 // formData 数据发生变化
-watch(formData, () => {
+watch(formData, { deep: true }, () => {
   resetConfig();
 });
 
