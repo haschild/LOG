@@ -9,9 +9,9 @@
     <el-sub-menu index="/about">
       <template #title>
         <el-icon><location /></el-icon>
-        <span>Bezier</span>
+        <span>贝塞尔曲线</span>
       </template>
-      <el-menu-item index="/about/bezier"> About </el-menu-item>
+      <el-menu-item index="/about/bezier"> Bezier </el-menu-item>
     </el-sub-menu>
     <el-sub-menu index="/posts">
       <template #title>

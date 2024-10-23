@@ -74,7 +74,7 @@
         @click.stop="selectCurve(curve)"
         :class="{
           curve: true,
-          'selected-curve': state.selectedCurveIndices.includes(index),
+          'selected-curve': state.selectedCurveList.includes(curve),
         }"
       />
     </svg>

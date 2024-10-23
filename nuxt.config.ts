@@ -79,11 +79,12 @@ export default defineNuxtConfig({
 
   nitro: {
     devProxy: {
-      "/log": {
-        target: "http://localhost:3000/log/getToken", // 这里是接口地址
+      "^/log/": {
+        target: "http://localhost:3000/log/getToken", // 这里是拦截的接口地址
         changeOrigin: true,
         prependPath: true,
       },
+ 
     },
     // plugins: ['~/server/plugins/mock.js']
   },

@@ -319,7 +319,7 @@ export function useBezier(emit) {
       }
     });
     state.value.curves = state.value.curves.filter(
-      (_, index) => !indices.includes(index),
+      (_, index) => !indices.includes(_),
     );
   };
 
