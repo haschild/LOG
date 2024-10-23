@@ -93,7 +93,7 @@ const Login = () => {
 
 const serveNavigate = () => {
   // 服务端跳转
-  fetch("http://localhost:3000/login", {
+  fetch("http://localhost:3000/log/getToken", {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
