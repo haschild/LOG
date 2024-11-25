@@ -4,6 +4,23 @@
     :style="{ width: config.containerWidth }"
     class="relative flex justify-between"
   >
+    <!-- 使用 transition 包装提示框 -->
+    <transition name="fade">
+      <div
+        v-if="tooltip.show && config.tooltip.enable"
+        class="tooltip-box"
+        :style="{
+          left: tooltip.x + config.tooltip.offset.x + 'px',
+          top: tooltip.y + config.tooltip.offset.y + 'px',
+        }"
+      >
+        <div class="tooltip-content" :style="config.tooltip.style">
+          <div>名称：{{ tooltip.data?.name }}</div>
+          <div>ID：{{ tooltip.data?.id }}</div>
+        </div>
+      </div>
+    </transition>
+
     <!-- 左侧列表 -->
     <div class="left">
       <ul>
@@ -12,6 +29,8 @@
           :key="'left' + item.id"
           :data-id="item.id"
           class="relative"
+          @mousemove="showTooltip($event, item)"
+          @mouseleave="hideTooltip"
         >
           {{ item.name }}
           <div
@@ -87,6 +106,8 @@
           :key="'right' + item.id"
           :data-id="item.id"
           class="relative"
+          @mousemove="showTooltip($event, item)"
+          @mouseleave="hideTooltip"
         >
           <div
             v-if="connectEnable()"
@@ -135,6 +156,30 @@ const {
     emit("change", data);
   }
 });
+
+// 添加tooltip相关的响应式数据
+const tooltip = ref({
+  show: false,
+  x: 0,
+  y: 0,
+  data: null,
+});
+
+// 显示提示框
+const showTooltip = (event, item) => {
+  tooltip.value.show = true;
+  tooltip.value.data = item;
+
+  // 计算提示框位置，添加一些偏移使其不遮挡鼠标
+  tooltip.value.x = event.clientX + 10;
+  tooltip.value.y = event.clientY + 10;
+};
+
+// 隐藏提示框
+const hideTooltip = () => {
+  tooltip.value.show = false;
+  tooltip.value.data = null;
+};
 
 // 组件挂载后的处理
 onMounted(() => {
@@ -217,5 +262,36 @@ li {
 .left,
 .right {
   z-index: 4;
+}
+
+// 添加提示框样式
+.tooltip-box {
+  position: fixed;
+  z-index: 1000;
+  pointer-events: none; // 防止tooltip影响鼠标事件
+
+  .tooltip-content {
+    white-space: nowrap;
+    backdrop-filter: blur(4px);
+    transform-origin: left center;
+  }
+}
+
+// 添加淡入淡出动画
+.fade-enter-active,
+.fade-leave-active {
+  transition: all 0.4s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
+  transform: scale(0.8);
+}
+
+.fade-enter-to,
+.fade-leave-from {
+  opacity: 1;
+  transform: scale(1);
 }
 </style>

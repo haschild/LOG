@@ -77,6 +77,17 @@ export function useBezier(emit) {
     connectorColor: "#3498db",
     highlightedConnectorColor: "#e74c3c",
     key: null,
+    // 添加 tooltip 配置
+    tooltip: {
+      enable: true, // 是否启用tooltip
+      offset: { x: 5, y: -10 }, // tooltip 偏移量
+      style: {
+        background: "rgba(0, 0, 0, 0.8)",
+        color: "white",
+        borderRadius: "4px",
+        padding: "8px 12px",
+      },
+    },
   };
 
   const config = ref(defaultConfig);

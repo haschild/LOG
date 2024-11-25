@@ -9,9 +9,10 @@
     <el-sub-menu index="/about">
       <template #title>
         <el-icon><location /></el-icon>
-        <span>贝塞尔曲线</span>
+        <span>功能组件</span>
       </template>
-      <el-menu-item index="/about/bezier"> Bezier </el-menu-item>
+      <el-menu-item index="/about/bezier"> 贝塞尔曲线 </el-menu-item>
+      <el-menu-item index="/about/upload"> 上传 </el-menu-item>
     </el-sub-menu>
     <el-sub-menu index="/posts">
       <template #title>
@@ -43,6 +44,8 @@ const handleOpen = (key: string, keyPath: string[]) => {
 const handleClose = (key: string, keyPath: string[]) => {
   console.log(key, keyPath);
 };
+
+const a = shallowRef(1);
 
 const route = useRoute();
 const activeName = computed(() => {

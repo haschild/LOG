@@ -32,6 +32,9 @@
         <el-form-item label="是否可以删除">
           <el-switch v-model="formData.isDeletable" />
         </el-form-item>
+        <el-form-item label="显示提示框">
+          <el-switch v-model="formData.tooltip.enable" />
+        </el-form-item>
       </el-form>
 
       <div class="mt-4">
@@ -71,6 +74,17 @@ const formData = ref({
   curveStyle: "solid",
   curveDirection: "leftToRight",
   isDeletable: true,
+  // 添加 tooltip 配置
+  tooltip: {
+    enable: true,
+    offset: { x: 5, y: -10 },
+    style: {
+      background: "rgba(0, 0, 0, 0.8)",
+      color: "white",
+      borderRadius: "4px",
+      padding: "8px 12px",
+    },
+  },
 });
 
 const bezierRef = ref(null);
@@ -113,7 +127,7 @@ const addDashedConnections = () => {
 };
 
 const resetConfig = () => {
-  bezierRef.value.resetConfig(formData.value);
+  bezierRef.value?.resetConfig(formData.value);
 };
 
 const initializeBezier = () => {
